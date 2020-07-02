@@ -1,0 +1,136 @@
+---
+title: Equipe
+---
+
+# Professores
+  <table border="0">
+      <tbody class="equipe">
+          <tr>
+              <td>
+                <img alt="" src="lisiane.jpg" style="width: 250px; height: 300px;" />
+              </td>
+              <td style="vertical-align:middle">
+                Lisiane Priscila Roldão Selau <br>
+                lisianeselau@gmail.com <br>
+                Sala B212 IME <br>
+                <a href="https://github.com/lisianeselau" target="_blank">
+                  github.com/lisianeselau
+                </a>
+              </td>
+              <td>
+                <img alt="" src="marcia.png" style="width: 250px; height: 300px;" />
+              </td>
+              <td style="vertical-align:middle">
+                Márcia Helena Barbian <br>
+                mhbarbian@gmail.com <br>
+                Sala B120 IME <br>
+                <a href="https://github.com/marcia-barbian" target="_blank">
+                  github.com/marcia-barbian
+                </a>
+              </td>
+          </tr>
+          <tr>
+              <td>
+                <img alt="" src="markus.jpg" style="width: 250px; height: 300px;" />
+              </td>
+              <td style="vertical-align:middle">
+                Markus Chagas Stein <br>
+                markus.stein@ufrgs.br <br>
+                Sala B120 IME <br>
+                <a href="https://github.com/markus-stein" target="_blank">
+                  github.com/markus-stein
+                </a>
+              </td>
+              <td>
+                <img alt="" src="rodrigo.jpg" style="width: 250px; height: 300px;" />
+              </td>
+              <td style="vertical-align:middle">
+                Rodrigo Citton Padilha dos Reis <br>
+                rodrigocpdosreis@gmail.com <br>
+                Sala B215 IME <br>
+                <a href="https://github.com/rdosreis" target="_blank">
+                  github.com/rdosreis
+                </a>
+              </td>
+          </tr>
+      </tbody>
+  </table>
+
+# Monitores
+
+<table>
+    <tbody class="equipe"> 
+        <tr>
+            <td>
+              <img alt="" src="gabriel.jpg" style="width: 250px; height: 300px;" />
+            </td>
+            <td style="vertical-align:middle">
+              Gabriel Holmer Saul <br>
+              <a href="https://github.com/ghsaul" target="_blank">
+                github.com/ghsaul
+              </a>
+            </td>
+            <td>
+              <img alt="" src="henrique.jpg" style="width: 250px; height: 300px;" />
+            </td>
+            <td style="vertical-align:middle">
+                Henrique Saraiva <br>
+                <a href="https://www.youtube.com/channel/UCCo5fq-1LJOGzDkBGTCqH7Q" target="_blank">
+                  Canal do youtube
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <img alt="" src="thierre.jpg" style="width: 250px; height: 300px;" />
+            </td>
+            <td style="vertical-align:middle">
+                Thierre Francisco Da Conceição <br>
+                thierre.francisco@ufrgs.br
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+# Colaboradores
+
+<table>
+    <tbody class="equipe"> 
+        <tr>
+            <td>
+              <img alt="" src="juliana.jpg" style="width: 250px; height: 300px;" />
+            </td>
+            <td style="vertical-align:middle">
+              Juliana Sena de Souza <br>
+              julianass.estatistica@gmail.com <br>
+              <a href="http://lattes.cnpq.br/9702936016840399" target="_blank">
+                Currículo Lattes
+              </a> <br>
+              <a href="https://github.com/ssjuliana" target="_blank">
+                github.com/ssjuliana
+              </a>
+            </td>
+            <td>
+              <img alt="" src="marlize.jpg" style="width: 250px; height: 300px;" />
+            </td>
+            <td style="vertical-align:middle">
+              Marlize Ramos Batista <br>
+              <a href="https://github.com/lizerb" target="_blank">
+                github.com/lizerb
+              </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <img alt="" src="priscila.jpg" style="width: 250px; height: 300px;" />
+            </td>
+            <td style="vertical-align:middle">
+              Priscilla Gnewuch <br>
+              <a href="http://lattes.cnpq.br/9396256436083330" target="_blank">
+                Currículo Lattes
+              </a>
+            </td>        
+        </tr>
+    </tbody>
+</table>
+

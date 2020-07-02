@@ -1,0 +1,135 @@
+{{ define "header" }}
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header {
+        background-image: url('{{ if .Params.image }}{{ .Params.image | relURL }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                <!--     <div class="tags"> -->
+                <!--         {{ range .Params.tags }} -->
+                <!--         <a class="tag" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" title="{{ . }}"> -->
+                <!--             {{ . }} -->
+                <!--         </a> -->
+                <!--         {{ end }} -->
+                <!--     </div> -->
+                <!--     <h1>{{ .Title }}</h1> -->
+                <!--     <h2 class="subheading" >{{ .Params.subtitle }}</h2> <!-- altera a cor do subtitulo do post que aparece dentro do post --> 
+                <!--     <span class="meta"> <!-- altera a cor da data ou do autor, se houver --> 
+                <!--         {{ if .Params.author }} <!-- Se houver o nome do autor do post --> 
+                <!--         Por <!--Escreva 'Por'--> 
+                <!--             {{ .Params.author }} <!-- Nome do autor --> 
+                <!--         em <!-- Escreva 'em' --> 
+                <!--             {{ .Date.Format "02/01/2006" }} <!-- Formato de data usual brasileiro, o default era Monday, January 2, 2006 --> 
+                <!--             {{ if .Site.Params.page_view_conter }} <!-- Se o parametro do config.toml de page viewer for true entao tambem mostre o page viewer --> 
+                <!--                 {{ partial "page_view_counter.html" . }} -->
+                <!--             {{ end }} -->
+                <!--         {{ else }} <!-- Caso o post nao tenha nome, so mostre a data de publicacao --> 
+                <!--             {{ .Date.Format "02/01/2006" }} -->
+                <!--         {{ end }}  -->
+
+                <!--         <!-- Don't show "Last Modified on" if update happened on the same day. --> 
+                <!--         {{ if (and (not .Lastmod.IsZero) (not (eq (dateFormat "02/01/2006" .Lastmod) (dateFormat "02/01/2006" .Date)))) }} -->
+                <!--         <br>Last Modified on {{ dateFormat "02/01/2006" .Params.LastMod }} -->
+                <!--         {{ end }} -->
+                <!--     </span> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{{ end }}
+
+{{ define "main" }}
+<!-- Post Content -->
+<article>
+    <div class="container"> <!--se voce colocar 'container-fluid' ao invez de 'container', as margens dos posts ficam menores-->
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- {{ if not (eq (.Param "showtoc") false) }} -->
+                <!-- <header> -->
+                <!--     <h2>Índice</h2> <!-- eh tipo o toc do rmarkdown, ele da hiperlinks dos topicos -->
+                <!-- </header> -->
+                <!-- {{.TableOfContents}} -->
+                <!-- {{ end }} -->
+                {{ .Content }}
+
+                <!-- {{ if .Site.Params.reward }} <!-- esse negocio de site reward eu achei bem estranho, mas enfim, eu coloquei como false no config.toml para nao dar confusao -->
+                <!-- {{ partial "reward.html" . }} -->
+                <!-- {{ end }} -->
+
+                <hr>
+                
+                <!--
+                
+                <ul class="pager">
+                    {{ if .PrevInSection }}
+                    <li class="previous">
+                        <a href="{{ .PrevInSection.URL }}" data-toggle="tooltip" data-placement="top" title="{{ .PrevInSection.Title}}">&larr;
+                            Post anterior</a> 
+                    </li>
+                    {{ end }}
+                    {{ if .NextInSection }}
+                    <li class="next">
+                        <a href="{{ .NextInSection.URL }}" data-toggle="tooltip" data-placement="top" title="{{ .NextInSection.Title}}">Post seguinte &rarr;</a>
+                    </li>
+                    {{ end }}
+                </ul>
+                
+                -->
+                
+                {{ partial "comments.html" . }}
+
+            </div>
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                {{ if .Site.Params.featured_tags }} <!-- Cria a caixa que mostra as featured tags na parte de baixo do post -->
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">Tags em destaque</a></h5>
+                    <div class="tags">
+                        {{ $featured_condition_size := .Site.Params.featured_condition_size }}
+                        {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+                        {{ if gt (len $taxonomy.Pages) $featured_condition_size }}
+                        <a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}" title="{{ $name }}">
+                            {{ $name }}
+                        </a>
+                        {{ end }}
+                        {{ end }}
+                    </div>
+                </section>
+                {{ end }}
+
+                <!-- Friends Blog -->
+                {{ if .Site.Params.friends }} <!-- Faz o mesmo que o de cima so que para o friends -->
+                <section>
+                    <hr>
+                    <h5>Parceiros</h5>
+                    <ul class="list-inline">
+                        {{ range .Site.Params.friend_link }}
+                        <li><a target="_blank" href="{{.href}}">{{.title}}</a></li>
+                        {{ end }}
+                    </ul>
+                </section>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</article>
+
+{{ end }}

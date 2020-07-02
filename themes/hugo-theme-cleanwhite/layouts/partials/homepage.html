@@ -1,0 +1,121 @@
+<article>
+    <div class="container-fluid"> <!--note o fluid, ele faz a post ficar mais largo-->
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- {{ if not (eq (.Param "showtoc") false) }} -->
+                <!-- <header> -->
+                <!--     <h2>Índice</h2> <!-- eh tipo o toc do rmarkdown, ele da hiperlinks dos topicos -->
+                <!-- </header> -->
+                <!-- {{.TableOfContents}} -->
+                <!-- {{ end }} -->
+                
+                
+                
+                
+                
+                <!-- AQUI VAI O CODIGO HTML DO POST -->
+                <!-- AQUI VAI O CODIGO HTML DO POST -->
+                <!-- AQUI VAI O CODIGO HTML DO POST -->
+                
+                
+            
+
+
+
+
+
+
+<h1 align="center">
+BEM VINDO(A) AO SITE DA DISCIPLINA MAT02219 - PROBABILIDADE E ESTATÍSTICA EAD!
+</h1>
+<p>Este site foi desenvolvido pela equipe de Probabilidade e Estatística EAD da UFRGS com o objetivo de reunir os principais materiais de apoio da disciplina, bem como materiais extras que corroboram com o aprendizado adicional.</p>
+<p>Os materiais básicos podem ser acessados nas abas <a href="livro/index.html">Livro</a>,
+<a href="slides/index.html">Slides</a>,
+<a href="videos/index.html">Vídeos</a> e
+<a href="listas/index.html">Listas</a>.</p>
+<p>Na aba <a href="extra/index.html">Materiais Extras</a> você pode acessar tabelas, apostilas, vídeos e aplicações web com conteúdo complementar.</p>
+<p>Você também pode acessar o github da disciplina clicando <a href="https://github.com/Probabilidade-e-Estatistica-EAD" target="_blank">aqui</a>.</p>
+<p>Bons estudos para todos!</p>
+
+
+
+
+                
+                
+                
+                
+                
+                <!-- AQUI ACABA O POST -->
+                <!-- AQUI ACABA O POST -->
+                <!-- AQUI ACABA O POST -->
+                
+                
+
+                <!-- {{ if .Site.Params.reward }} <!-- esse negocio de site reward eu achei bem estranho, mas enfim, eu coloquei como false no config.toml para nao dar confusao -->
+                <!-- {{ partial "reward.html" . }} -->
+                <!-- {{ end }} -->
+
+                <hr>
+                <ul class="pager">
+                    {{ if .PrevInSection }}
+                    <li class="previous">
+                        <a href="{{ .PrevInSection.URL }}" data-toggle="tooltip" data-placement="top" title="{{ .PrevInSection.Title}}">&larr;
+                            Post anterior</a> <!-- botao de ver o post anterior -->
+                    </li>
+                    {{ end }}
+                    {{ if .NextInSection }}
+                    <li class="next">
+                        <a href="{{ .NextInSection.URL }}" data-toggle="tooltip" data-placement="top" title="{{ .NextInSection.Title}}">Post seguinte &rarr;</a> <!-- botao de ver o post seguinte -->
+                    </li>
+                    {{ end }}
+                </ul>
+
+                {{ partial "comments.html" . }}
+
+            </div>
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                {{ if .Site.Params.featured_tags }} <!-- Cria a caixa que mostra as featured tags na parte de baixo do post -->
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">Tags em destaque</a></h5>
+                    <div class="tags">
+                        {{ $featured_condition_size := .Site.Params.featured_condition_size }}
+                        {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+                        {{ if gt (len $taxonomy.Pages) $featured_condition_size }}
+                        <a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}" title="{{ $name }}">
+                            {{ $name }}
+                        </a>
+                        {{ end }}
+                        {{ end }}
+                    </div>
+                </section>
+                {{ end }}
+
+                <!-- Friends Blog -->
+                {{ if .Site.Params.friends }} <!-- Faz o mesmo que o de cima so que para o friends -->
+                <section>
+                    <hr>
+                    <h5>Parceiros</h5>
+                    <ul class="list-inline">
+                        {{ range .Site.Params.friend_link }}
+                        <li><a target="_blank" href="{{.href}}">{{.title}}</a></li>
+                        {{ end }}
+                    </ul>
+                </section>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</article>

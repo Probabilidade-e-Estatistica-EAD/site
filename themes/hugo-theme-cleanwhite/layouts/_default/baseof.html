@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+{{ partial "head.html" . }}
+{{ partial "nav.html" . }}
+<!-- Page Header -->
+{{ block "header" .}}
+<header class="intro-header" style="background-image: url('{{ .Site.Params.header_image | relURL }}')"> <!--adiciona o banner no site, eu acho...-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 "> <!--altera o alinhamento e tamanho do titulo-->
+                <div class="site-heading">
+                <h1>          </h1> <!--o comportamento do titulo pode ser mudado dentro do comando h1; o comando {{.Site.Title}} eh o titulo que foi declarado no config.toml--> 
+                    <!--<hr class="small">-->
+		    <span class="subheading">{{ .Site.Params.slogan }}</span> <!--a mesma coisa do de cima so que para o slogan-->
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{{ end }}
+
+{{ block "main" . }}
+{{ end }}
+
+{{ partial "footer.html" . }}
+</body>
+</html>

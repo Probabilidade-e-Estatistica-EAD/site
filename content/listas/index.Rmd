@@ -1,0 +1,60 @@
+---
+title: Listas
+---
+
+<h1 class="titulo">
+  Listas de exercício
+</h1>
+
+Pronto para pôr em prática o que você aprendeu? Então vamos nessa!
+
+As listas foram numeradas da mesma maneira em que os slides e as videoaulas da disciplina. Ex.: Os exercícios referentes ao slide/videoaula 2.3 estão na lista 2.3.
+
+## Área 1
+
+[Lista 1.1 - Introdução](listas_1/lista1.1.pdf)
+
+[Lista 1.2 e 1.3 - Distribuições de frequência e Representações gráficas](listas_1/lista1.2-1.3.pdf)
+
+[Lista 1.4 e 1.5 - Medidas descritivas e Análise exploratória](listas_1/lista1.4-1.5.pdf)
+
+[Lista 1.6 - Introdução à probabilidade e teoremas](listas_1/lista1.6.pdf)
+
+[Lista 1.7 - Probabilidade condicional e teorema de Bayes](listas_1/lista1.7.pdf)
+
+## Área 2
+
+[Lista 2.1 - Variáveis aleatórias discretas](listas_2/lista2.1.pdf)
+
+[Lista 2.2 - Variáveis aleatórias contínuas](listas_2/lista2.2.pdf)
+
+[Lista 2.3 - Distribuições amostrais](listas_2/lista2.3.pdf)
+
+[Lista 2.4 - Estimação](listas_2/lista2.4.pdf)
+
+## Área 3
+
+[Lista 3.1 - Testes de hipóteses introdução](listas_3/lista3.1.pdf)
+
+[Lista 3.2 - Testes de hipóteses médias](listas_3/lista3.2.pdf)
+
+[Lista 3.3 e 3.4 - Testes de hipóteses variâncias e proporções](listas_3/lista3.3-3.4.pdf)
+
+[Lista 3.5 e 3.6 - Coeficiente de correlação e Regressão linear simples](listas_3/lista3.5-3.6.pdf)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

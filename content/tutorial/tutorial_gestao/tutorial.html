@@ -1,0 +1,225 @@
+---
+title: "Como gerenciar o site de MAT02219 - Probabilidade e Estatística EAD - UFRGS"
+author: "Gabriel Holmer Saul e Márcia Barbian"
+output:
+  bookdown::gitbook:
+    split_by: chapter+number
+    config:
+     toc:
+       collapse: subsection
+       scroll_highlight: yes
+       before: null
+       after: null
+     toolbar:
+       position: fixed
+     edit : null
+     download: []
+     search: yes
+     fontsettings:
+       theme: white
+       family: sans
+       size: 2
+     sharing: no
+site: bookdown::bookdown_site
+---
+
+
+
+<div id="prefácio" class="section level1 unnumbered">
+<h1>Prefácio</h1>
+<p><img src="/probabilidade-estatistica/img/wallpaper_oficial.png" /></p>
+<p>O objetivo deste material é fornecer um guia para que professores, monitores, colaboradores ou curiosos possam aprender sobre a elaboração de um site utilizando o <code>Hugo</code> e o pacote <code>Blogdown</code>.</p>
+<p>Assume-se que a pessoa que estiver lendo este material sabe pouco ou nada de programação em html, css ou java script e que também não sabe como o pacote <code>Blogdown</code> do R e o gerador de sites estáticos <code>Hugo</code> funcionam, este material não tem o objetivo de ser um guia formal. Alguns métodos e soluções apresentados aqui, apesar de serem eficazes, podem ter uma maneira mais eficiente de serem executados.</p>
+<p>No tutorial considera-se que o repositório do site encontra-se em <a href="https://github.com/Probabilidade-e-Estatistica-EAD/site">https://github.com/Probabilidade-e-Estatistica-EAD/site</a>.</p>
+<p>Este material está sob a licença no <a href="https://creativecommons.org/">Creative Commons</a>.</p>
+<center>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/80x15.png" />
+</a>
+<br/>This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License
+</a>.
+</center>
+</div>
+<div id="como-rodar-o-site-localmente" class="section level1">
+<h1>Como rodar o site localmente</h1>
+<p>1 - Escolha o diretório onde a pasta do projeto irá ficar. Como exemplo, criei uma pasta com alguns projetos e incluirei o site como um deles.</p>
+<p><img src="img/1.passo1.png" /></p>
+<p>2 - Digite “cmd” no endereço da pasta e tecle enter, isso vai abrir o prompt de comando na pasta</p>
+<p><img src="img/1.passo2.png" /></p>
+<p><img src="img/1.passo3.png" /></p>
+<p>3 - Assumindo que você tenha o git instalado no seu computador, digite o comando <code>git clone https://github.com/Probabilidade-e-Estatistica-EAD/site</code>. Isso irá clonar o repositório do github e linkar o projeto do R ao endereço do repositório.</p>
+<p><img src="img/1.passo4.png" /></p>
+<p><img src="img/1.passo5.png" /></p>
+<p>4 - Agora que a pasta do site está no nosso repositório, abra o arquivo <code>prob_est_site.Rproj</code> (é necessário ter o R e o Rstudio instalado)</p>
+<p><img src="img/1.passo6.png" /></p>
+<p><img src="img/1.passo7.png" /></p>
+<p><img src="img/1.passo8.png" /></p>
+<p>5 - Baixe o pacote <code>Blogdown</code> e o <code>Hugo</code> usando os comandos abaixo</p>
+<pre class="r"><code>install.packages(&#39;blogdown&#39;)
+blogdown::install_hugo()</code></pre>
+<p>6 - Na aba <code>Addins</code> clique em <code>Serve Site</code>, ou rode o comando <code>blogdown::serve_site()</code> no console. Este comando irá rodar o site em um servidor local o que nos permitirá ver o site.</p>
+<p><img src="img/1.passo9.png" /></p>
+<p>7 - O ambiente deve se parecer com isto</p>
+<p><img src="img/1.passo10.png" /></p>
+<p>Para visualizar o site no browser, clique na opção “Show in new window” na aba “Viewer”.</p>
+<p>Não é possível ver o website de outra maneira a não ser esta. Não há um arquivo html que possamos abrir e facilmente ter uma visão geral, como no output em html do Rmarkdown.</p>
+</div>
+<div id="pastas-e-arquivos-principais" class="section level1">
+<h1>Pastas e arquivos principais</h1>
+<p>No projeto, algumas pastas e arquivos têm importância fundamental para a construção do site e na maioria dos casos <strong>precisam</strong> ter um nome específico. Vamos ver algumas delas agora.</p>
+<div id="public" class="section level2">
+<h2>public</h2>
+<p>A pasta public é o site propriamente dito. Isso significa que apenas esta pasta será upada no endereço web. Ao executar a função <code>serve_site()</code>, todos os arquivos de outras pastas têm o propósito de agregar conteúdo ao site ou juntar os pedaços de código espalhados pelo diretório a fim de criar o site. Então, todos esses arquivos ficarão na pasta public.</p>
+<p><img src="img/2.public.png" /></p>
+<p>Se você já usou o pacote <code>Bookdown</code>, deve ter notado que ele cria mais de um arquivo html e também algumas pastas, diferente do output em html do Rmarkdown, que é apenas um arquivo html. Isso acontece porque no <code>Bookdown</code>, cada html é um capítulo ou subcapítulo do livro; o mesmo acontece com o site, existem vários arquivos html dentro da pasta public, pois cada página do site é um html diferente. No <code>Bookdown</code>, as pastas que ele gera contém arquivos que dão a aparência suave e estilosa para os html’s gerados. Sem elas, os arquivos terão uma aparência rústica. O mesmo ocorre para o site, aquelas várias pastas modificam diferentes detalhes, como fonte, alinhamento, design…</p>
+</div>
+<div id="themes" class="section level2">
+<h2>themes</h2>
+<p>Aqui ficam os arquivos detalhistas de programação html, css e javascript.</p>
+<p><img src="img/2.themes.png" /></p>
+<p>O Hugo possuí vários temas diferentes e cada um deles mantém mais ou menos a mesma estrutura de arquivos e pastas. Eles tem maneiras similares de adicionar um post, uma imagem ou um menu superior, mas mastém aparências diferentes. O que modifica essa aparência (tamanho da fonte, cor de fundo, se algum botão terá ou não uma animação) são os arquivos da pasta themes. A maior parte das alterações relacionadas à estrutura do site são feitas dentro desta pasta.</p>
+</div>
+<div id="content" class="section level2">
+<h2>content</h2>
+<p>Aqui ficam os posts e menus superiores.</p>
+<p><img src="img/2.content.png" /></p>
+<p><img src="img/2.content2.png" /></p>
+<p>Vejamos como os arquivos desta pasta funcionam com um exemplo. Em extra/index.Rmd:</p>
+<p><img src="img/2.content.extra1.png" /></p>
+<p>O arquivo que dá conteúdo ao menu Materiais Extras é um arquivo em Rmarkdown (.Rmd), então sabendo usar essa “linguagem” é possível alterar o conteúdo desse menu a vontade. Note que foram adicionados alguns códigos em html, que o Rmarkdown reconhece, para deixar a aparência do site mais personalizada.</p>
+<p><img src="img/2.content.extra2.png" /></p>
+<p>A maioria dos arquivos que a página irá usar também precisam estar na pasta. Veja, por exemplo, a pasta listas.</p>
+<p><img src="img/2.content.arquivos1.png" /></p>
+<p><img src="img/2.content.arquivos2.png" /></p>
+<p><img src="img/2.content.arquivos3.png" /></p>
+</div>
+<div id="static" class="section level2">
+<h2>static</h2>
+<p>Arquivos que serão adicionados às páginas, como pdf’s, ficam na pasta content. Com excessão de imagens, que ficam na pasta static. Na verdade, a pasta static serve apenas para guardar imagens que serão usadas nos posts. Vejamos o exemplo da pasta equipe.</p>
+<p><img src="img/2.static.equipe1.png" /></p>
+<p><img src="img/2.static.equipe2.png" /></p>
+<p>Como o nome da pasta em content e static é igual (isso é necessário), o <code>Blogdown</code> irá mesclar as duas pastas, e no public ficará assim.</p>
+<p><img src="img/2.static.equipe3.png" /></p>
+<p>Isso facilita muito a programação da página, pois o endereço da imagem no código assume que as imagens estarão no mesmo diretório final. Recomendo que, ao adicionar uma imagem a um menu, crie uma pasta no static com o mesmo nome que a pasta do content e mantenha o arquivo index.Rmd do content na primeira camada da pasta, ou seja, não ponha o index.Rmd dentro de mais outra pasta (por exemplo, deixe novo_menu/index.Rmd, mas não deixe novo_menu/pasta_aleatoria/index.Rmd).</p>
+</div>
+<div id="config.toml" class="section level2">
+<h2>config.toml</h2>
+<p>Esse arquivo controla várias macro opções do site. Recomendo que você dê uma olhada nos argumentos desse arquivo, pois a maioria deles são auto explicativos.</p>
+</div>
+</div>
+<div id="como-dar-o-deploy-do-site-para-o-endereço-ufrgs" class="section level1">
+<h1>Como dar o deploy do site para o endereço UFRGS</h1>
+<p>1 - Se você terminou as alterações do site e rodou o comando <code>serve_site()</code>, recomendo reiniciar o R para interromper a atualização automática e impedir que o comando adicione arquivos à pasta public.</p>
+<p><img src="img/2.passo1.png" /></p>
+<p>2 - Exclua todos os arquivos da pasta public</p>
+<p><img src="img/2.passo2.png" /></p>
+<p>3 - Rode o comando <code>blogdown::build_site()</code>. A diferença entre o <code>serve_site()</code> e o <code>build_site()</code> é que o primeiro gera o site para ser visualizado localmente, enquanto que o segundo gera o site para o deploy da pasta public no domínio. Ambos modificam o conteúdo da pasta public para cumprir o seu propósito, por isso é necessário excluir os arquivos gerados pelo <code>serve_site()</code> antes de rodar o <code>build_site()</code>.</p>
+<p><img src="img/2.passo3.png" /></p>
+<p>4 - Ao lado da aba Console, clique na aba Terminal e digite o seguinte comando <code>git pull origin master</code>. Esse comando adiciona quaisquer modificações em arquivos que estão no repositório do github mas não no seu repositório local. É importante usar esse comando para se certificar que você não estará sobrescrevendo alterações feitas por outros usuários na branch master, e seu repositório ficará igual ao do github.</p>
+<p><img src="img/2.passo4.png" /></p>
+<p>5 - Rode o comando <code>git add --all</code></p>
+<p><img src="img/2.passo5.png" /></p>
+<p>6 - Em seguida, digite o comando <code>git commit -m "MENSAGEM DO COMMIT"</code></p>
+<p><img src="img/2.passo6.png" /></p>
+<p>7 - Digite o comando <code>git push origin master</code> e suas alterações estarão no github.</p>
+<p><img src="img/2.passo7.png" /></p>
+<p>8 - Por fim, use algum software para dar o deploy no domínio UFRGS, como o FileZilla, lembrando que apenas a pasta public será upada, pois ela é o site.</p>
+</div>
+<div id="perguntas-e-respostas" class="section level1">
+<h1>Perguntas e respostas</h1>
+<div id="caso-o-endereço-do-site-mude-como-comunico-isso-ao-blogdown" class="section level2">
+<h2>Caso o endereço do site mude, como “comunico” isso ao blogdown?</h2>
+<p>config.toml -&gt; baseurl</p>
+</div>
+<div id="como-mudar-o-título-do-site-que-aparece-na-guia-do-browser" class="section level2">
+<h2>Como mudar o título do site que aparece na guia do browser?</h2>
+<p>config.toml -&gt; title</p>
+</div>
+<div id="como-mudar-o-número-de-posts-que-aparecem-por-vez-em-uma-página-na-aba-blog" class="section level2">
+<h2>Como mudar o número de posts que aparecem por vez em uma página na aba Blog?</h2>
+<p>config.toml -&gt; paginate</p>
+</div>
+<div id="como-mudar-a-imagem-de-fundo" class="section level2">
+<h2>Como mudar a imagem de fundo?</h2>
+<p>Coloque a imagem nova em static/img e altere o endereço em config.toml -&gt; header_image</p>
+</div>
+<div id="como-mudar-a-imagem-de-erro-404" class="section level2">
+<h2>Como mudar a imagem de erro 404?</h2>
+<p>Coloque a imagem nova em static/img e altere o endereço em config.toml -&gt; image_404</p>
+</div>
+<div id="como-mudar-o-texto-da-página-de-erro-404" class="section level2">
+<h2>Como mudar o texto da página de erro 404?</h2>
+<p>config.toml -&gt; title_404</p>
+</div>
+<div id="como-adicionar-um-novo-menu-superior" class="section level2">
+<h2>Como adicionar um novo menu superior?</h2>
+<p>1 - Vá em content e crie uma nova pasta, aqui você pode escolher o nome para a pasta que você preferir</p>
+<p><img src="img/novo_menu1.png" /></p>
+<p>2 - Crie um novo arquivo em Rmarkdown no formato abaixo:</p>
+<p><img src="img/novo_menu2.png" /></p>
+<p>No yaml, o argumento title será o texto mostrado na guia do browser quando o usuário estiver acessando o menu. O comando <code>h1</code> em html é equivalente ao <code>#</code> do Rmarkdown, mas recomendo que usem para o título na página essa estrutura pois <code>class="titulo"</code> é um bloco de código em css que programei para a fonte ficar maior que o normal quando o <code>h1</code> tiver essa classe (arquivo em themes/hugo-theme-cleanwhite/static/css/hux-blog.min.css). Depois do título, o resto do arquivo pode ser escrito como um Rmarkdown normal.</p>
+<p>3 - Salve o arquivo com o nome <code>index.Rmd</code>.</p>
+<p><img src="img/novo_menu3.png" /></p>
+<p>A função <code>serve_site()</code> irá renderizar o Rmd para html automaticamente (senão, salve algum arquivo para a função renderizar o site novamente ou rode o <code>serve_site()</code> de novo).</p>
+<p><img src="img/novo_menu4.png" /></p>
+<p>A página já está na pasta public (ou seja, já está no site), mas agora precisamos informar ao site que queremos que a página seja exibida como menu superior.</p>
+<p><img src="img/novo_menu5.png" /></p>
+<p>Se olharmos a prévia do site, o novo menu não foi adicionado.</p>
+<p><img src="img/novo_menu6.png" /></p>
+<p>Mas se digitarmos manualmente o endereço da pasta na url, temos como acesar a página.</p>
+<p><img src="img/novo_menu7.png" /></p>
+<p>Obviamente, o usuário não vai adivinhar que existe um menu escondido no site, então se quisermos que ele o acesse, precisamos adicionar a página como um menu superior.</p>
+<p>4 - Vá em config.toml, no final do arquivo você deve ver um bloco de código parecido com isto:</p>
+<p><img src="img/novo_menu8.png" /></p>
+<p>[[params.addtional_menus]] = Declara que você quer adicionar um novo menu</p>
+<p>title = “Título do menu” = Informa o título do menu, note que o site sempre põe o texto em caixa alta.</p>
+<p>href = “pasta_do_menu/index.html” = Endereço do arquivo html transformado pelo serve site apartir do Rmd.</p>
+<p>Adaptando o exemplo:</p>
+<p><img src="img/novo_menu9.png" /></p>
+<p>Note o título na guia no canto superior esquerdo, o título na página e o nome menu teste na linha de menus.</p>
+<p><img src="img/novo_menu10.png" /></p>
+</div>
+<div id="como-mudar-o-conteúdo-de-um-menu-superior" class="section level2">
+<h2>Como mudar o conteúdo de um menu superior?</h2>
+<p>Leia “Como adicionar um novo menu superior?” primeiro.</p>
+<p>Vá em content/pasta_do_menu_que_deseja_alterar/index.Rmd</p>
+<p>Como o arquivo é um Rmarkdown, a alteração é igual a de um Rmarkdown qualquer.</p>
+</div>
+<div id="como-trocar-a-ordem-dos-menus-superiores" class="section level2">
+<h2>Como trocar a ordem dos menus superiores?</h2>
+<p>Leia “Como adicionar um novo menu superior?” primeiro.</p>
+<p>Em config.toml, desça até chegar nos blocos de código referentes aos menus. A ordem dos menus é a ordem dos blocos de código. Se eu quisesse que o menu teste ficasse entre livro e slides, bastaria deixar o bloco de código entre os dois no config.toml. As ordem das abas home e blog são tratadas de maneira diferente.</p>
+</div>
+<div id="como-remover-um-menu-superior" class="section level2">
+<h2>Como remover um menu superior?</h2>
+<p>Leia “Como adicionar um novo menu superior?” primeiro.</p>
+<p>1 - Vá em config.toml e exclua o bloco de código correspondente ao menu</p>
+<p>2 - Exclua a pasta do menu em content</p>
+<p>3 - Exclua todos os arquivos da pasta public para garantir que não haverá resquícios do menu no site</p>
+</div>
+<div id="como-mudar-a-homepage" class="section level2">
+<h2>Como mudar a homepage?</h2>
+<p>O tema do site, cleanwhite, foi criado para ser um blog pessoal. Por default, a homepage é a lista de todos os posts que a pessoa criou. Para mostrar uma página fixa ao invéz da lista de posts, foi necessário fazer algumas modificações. Assim, os passos para modificar o conteúdo da homepage são os seguintes:</p>
+<p>1 - Vá em content/homepage/home.Rmd e faça as alterações desejadas no arquivo (note que o arquivo não tem nome index.Rmd, mas você verá que para este caso isso não importa).</p>
+<p><img src="img/homepage1.png" /></p>
+<p>2 - Salve o arquivo e isso irá ativar a função <code>serve_site()</code>, que irá transformar o arquivo Rmd em html. Abra o arquivo content/homepage/home.html e copie tudo menos as três primeiras linhas com o título.</p>
+<p><img src="img/homepage2.png" /></p>
+<p>3 - Vá em themes/hugo-theme-cleanwhite/layouts/partials/homepage.html e cole o código que você copiou entre os blocos de comentários “AQUI VAI O CODIGO HTML DO POST” e “AQUI ACABA O POST”.</p>
+<p><img src="img/homepage3.png" /></p>
+<p>O arquivo homepage.html é a própria homepage, o que estiver entre os dois blocos de comentário é o conteúdo da página, o resto é responsável pela estrutura da página. Seria possível programar a homepage direto em html, mas como o <code>Blogdown</code> renderiza o Rmd para html, somente é necessário mudar o Rmd.</p>
+<p>A título de curiosidade, o arquivo que realmente é responsável pela homepage, na verdade, é o themes/hugo-theme-cleanwhite/layouts/index.html</p>
+<p><img src="img/homepage4.png" /></p>
+<p>Esse arquivo mostra a homepage baseado em algum arquivo, aqui não é necessário modificar nada.</p>
+</div>
+<div id="como-escrever-os-diretórios-corretamente-nos-arquivos" class="section level2">
+<h2>Como escrever os diretórios corretamente nos arquivos?</h2>
+<p>Ao mostrar um arquivo no site, é necessário informar o endereço dele no código. O endereço dos arquivos é sempre em relação a pasta public, então se você escrever o endereço como <strong>C:/pasta1/pasta2/pasta3/site/content/menu1/arquivo.pdf</strong> e rodar o comando <code>serve_site()</code> o site não encontrará o arquivo por dois motivos:</p>
+<p>1 - O endereço não é referente à pasta public. Esse passo não é difícil de resolver, pois se o arquivo está na pasta content ele irá para o public graças ao <code>serve_site()</code>. Dessa maneira, o certo <em>seria</em> <strong>C:/pasta1/pasta2/pasta3/site/public/menu1/arquivo.pdf</strong>, mas aí entra o motivo 2:</p>
+<p>2 - O diretório pai precisa ser a pasta public. Dessa forma o certo <em>seria</em> <strong>/menu1/arquivo.pdf</strong>. No caso do site da disciplina de Probabilidade e Estatística, é necessário fazer uma última alteração para <strong>/probabilidade-estatistica/menu1/arquivo.pdf</strong>.</p>
+<p>Essa maneira de escrever os endereços é muito boa para arquivos que aparecem em todas as páginas do site, como a imagem com os logos das instituições no final das páginas, e funciona para qualquer caso.</p>
+<p>Se for um arquivo que já está na mesma pasta que o index.html, então é possível cortar uma parte do endereço, veja na imagem abaixo.</p>
+<p><img src="img/endereco1.png" /></p>
+<p>Note que no index do menu listas o endereço das listas não usa o endereço completo, que seria /probabilidade-estatistica/listas/listas_1/lista1.6.pdf, por exemplo. Como o arquivo e o index compatilham a mesma pasta, é possível remover as partes probabilidade-estatistica e listas. Percebam que mesmo assim, o endereço não foi escrito como /listas_1/lista1.6.pdf, pois a barra inicial indica que aquele é o diretório pai e na pasta public não há uma pasta chamada listas_1 (e no nosso caso em particular ainda precisaria escrever probabilidade-estatistica antes para escrever corretamente o diretório pai). Uma vez que aquela é uma pasta conjunta e não o diretório pai, escrevemos sem a barra inicial.</p>
+</div>
+</div>

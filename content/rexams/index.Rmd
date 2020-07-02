@@ -1,0 +1,15 @@
+---
+title: Rexams
+---
+
+<h1 class="titulo">
+  Rexams
+</h1>
+
+Você pode acessar os arquivos com as questões de provas clicando <a href="https://github.com/Probabilidade-e-Estatistica-EAD/Rexams" target="_blank">aqui</a>.
+
+
+
+
+
+ 

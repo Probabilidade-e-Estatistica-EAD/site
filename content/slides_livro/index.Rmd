@@ -1,0 +1,18 @@
+---
+title: Slides do material da openintro, compatível com o material do Livro da disciplina.
+date: "2020"
+---
+
+<h1 class="titulo"> 
+  Slides Openintro
+</h1>
+
+Este material é baseado nos Slides da OpenIntro Statistics, o qual foi traduzido e adaptado por Priscilla Gnewuch e Márcia Helena Barbian. Recomenda-se a utilização do mesmo como material de estudo para acompanhamento da disciplina.
+
+A numeração dos capítulos POSSUI relação direta com o livro.
+
+
+
+[Capítulo 1 - Introdução](capitulo1_introducao.pdf)
+
+

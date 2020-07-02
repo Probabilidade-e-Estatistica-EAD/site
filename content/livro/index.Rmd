@@ -1,0 +1,32 @@
+---
+title: Livro da disciplina
+---
+
+<h1 class="titulo">
+  Livro da disciplina
+</h1>
+
+Este material é baseado no livro OpenIntro Statistics, o qual foi traduzido e adaptado pela aluna de pós-graduação Juliana Sena de Souza e pelos professores Márcia, Lisiane, Markus e Rodrigo. Recomenda-se a utilização do mesmo como material de estudo para acompanhamento da disciplina.
+
+Obs.: A numeração dos capítulos NÃO possui relação direta com a numeração dos slides/vídeos da disciplina. Verifique os títulos de cada material.
+
+<b>[Capítulo 1 - Introdução](cpt1/ch1_intro.html)</b>
+
+<b>[Capítulo 2 - Probabilidade](cpt2/ch2_prob.html)</b>
+
+<b>[Capítulo 3 - Distribuições de Variáveis Aleatórias](cpt3/ch3_distribuicoes.html)</b>
+
+<b>[Capítulo 4 - Fundamentos para Inferência](cpt4/ch4_fund_inf.html)</b>
+
+<b>[Capítulo 5 - Inferência para dados numéricos](cpt5/ch5_inf_num.html)</b>
+
+<b>[Capítulo 6 - Inferência para dados categóricos](cpt6/ch6_inf_cat.html)</b>
+
+<b>[Capítulo 7 - Introdução à Regressão Linear](cpt7/ch7_reg_simples.html)</b>
+
+<b>[Capítulo 8 - Regressão Múltipla e Logística](cpt8/ch8_reg_mult_log.html)</b>
+
+
+
+
+ 
