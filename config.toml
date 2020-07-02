@@ -4,7 +4,7 @@ theme = "hugo-theme-cleanwhite"
 languageCode = "en-us"
 # Enable comments by entering your Disqus shortname
 disqusShortname = "probabilidade-estatistica"
-googleAnalytics = ""
+googleAnalytics = "UA-168739494-1"
 preserveTaxonomyNames = true
 paginate = 10 #frontpage pagination
 hasCJKLanguage = true
@@ -84,7 +84,6 @@ home = ["HTML", "RSS", "Algolia"]
   [[params.addtional_menus]]
   title =  "Livro"
   href = "livro/index.html"
-  #href =  "ch1_intro/_book/ch1_intro.html"
   
   [[params.addtional_menus]]
   title =  "Slides do livro"
@@ -114,9 +113,9 @@ home = ["HTML", "RSS", "Algolia"]
   title =  "Rexams"
   href =  "rexams/index.html"
   
- # [[params.addtional_menus]]
-#  title =  "Probcast"
-#  href =  "probcast/index.html"
+  [[params.addtional_menus]]
+  title =  "Probcast"
+  href =  "probcast/index.html"
   
   [[params.addtional_menus]]
   title =  "Tutorial site"
