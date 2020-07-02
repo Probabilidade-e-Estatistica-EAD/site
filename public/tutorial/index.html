@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Probabilidade e Estatística EAD">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://www.ufrgs.br/probabilidade-estatistica//img/wallpaper_oficial.png">
+    <meta property="twitter:image" content="https://www.ufrgs.br/probabilidade-estatistica//img/wallpaper_oficial.png" /> 
+    
+
+    
+    <meta name="title" content="Tutorial" />
+    <meta property="og:title" content="Tutorial" />
+    <meta property="twitter:title" content="Tutorial" />
+    
+
+    
+    <meta name="description" content="">
+    <meta property="og:description" content="" />
+    <meta property="twitter:description" content="" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/probabilidade-estatistica/img/prob_header.png"> 
+
+    <title>Tutorial</title> 
+
+    <link rel="canonical" href="/probabilidade-estatistica/probabilidade-estatistica/tutorial/">
+
+    <link rel="stylesheet" href="/probabilidade-estatistica/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/probabilidade-estatistica/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/probabilidade-estatistica/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/probabilidade-estatistica/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/probabilidade-estatistica/js/jquery.min.js"></script>
+    
+    
+    <script src="/probabilidade-estatistica/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/probabilidade-estatistica/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>  
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/probabilidade-estatistica/">Home</a> 
+                    </li>
+
+                    
+		     
+                        <li><a href="/probabilidade-estatistica/livro/index.html">Livro</a></li>
+                     
+                        <li><a href="/probabilidade-estatistica/slides_livro/index.html">Slides do livro</a></li>
+                     
+                        <li><a href="/probabilidade-estatistica/slides/index.html">Slides</a></li>
+                     
+                        <li><a href="/probabilidade-estatistica/videos/index.html">Vídeos</a></li>
+                     
+                        <li><a href="/probabilidade-estatistica/listas/index.html">Listas</a></li>
+                     
+                        <li><a href="/probabilidade-estatistica/extra/index.html">Materiais Extras</a></li>
+                     
+                        <li><a href="/probabilidade-estatistica/equipe/index.html">Equipe</a></li>
+                     
+                        <li><a href="/probabilidade-estatistica/rexams/index.html">Rexams</a></li>
+                     
+                        <li><a href="/probabilidade-estatistica/tutorial/index.html">Tutorial site</a></li>
+                    
+                    
+                     
+                        
+                    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/probabilidade-estatistica/img/wallpaper_oficial.png')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                
+                
+                
+                
+                 
+                 
+                 
+                
+                
+
+                 
+                
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container"> 
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                
+                
+                
+                
+                
+                
+
+
+<h1 class="titulo">
+Tutorial do site
+</h1>
+<p>Para acessar o tutorial de como gerir o site de Probabilidade e Estatística, <a href="tutorial_gestao/prefácio.html">clique aqui</a>.</p>
+
+
+                
+
+                <hr>
+                
+                
+                
+                
+<div id="disqus-comment"></div>
+
+<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "probabilidade-estatistica" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+                <img src="/probabilidade-estatistica/home_img/todos_logo.png" class="center" style="display:block;" width="100%"/>
+		<p class="copyright text-muted">
+		                Copyright &copy; Probabilidade e Estatística EAD 2020
+		                <br>
+		                Site criado por <a href="https://github.com/ghsaul" target="_blank">Gabriel Holmer Saul</a> e <a href="https://github.com/lizerb" target="_blank">Marlize Ramos Batista</a>
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

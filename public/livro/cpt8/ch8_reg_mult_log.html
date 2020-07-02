@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>ch8_reg_mult_log.utf8</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="ch8_reg_mult_log.utf8" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="ch8_reg_mult_log.utf8" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path=""><a href="#prefácio"><i class="fa fa-check"></i>Prefácio</a></li>
+<li class="chapter" data-level="1" data-path=""><a href="#multipleAndLogisticRegression"><i class="fa fa-check"></i><b>1</b> Regressão Múltipla e Logística</a><ul>
+<li class="chapter" data-level="1.1" data-path=""><a href="#introductionToMultipleRegression"><i class="fa fa-check"></i><b>1.1</b> Introdução à regressão múltipla</a><ul>
+<li class="chapter" data-level="1.1.1" data-path=""><a href="#twoSingleVariableModelsForMarioKartData"><i class="fa fa-check"></i><b>1.1.1</b> Um modelo de variável única para os dados do Mario Kart</a></li>
+<li class="chapter" data-level="1.1.2" data-path=""><a href="#includingAndAssessingManyVariablesInAModel"><i class="fa fa-check"></i><b>1.1.2</b> Incluindo e avaliando muitas variáveis em um modelo</a></li>
+<li class="chapter" data-level="1.1.3" data-path=""><a href="#r2-ajustado-como-melhor-estimativa-da-variância-explicada"><i class="fa fa-check"></i><b>1.1.3</b> <span class="math inline">\(R^2\)</span> ajustado como melhor estimativa da variância explicada</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path=""><a href="#modelSelection"><i class="fa fa-check"></i><b>1.2</b> Seleção de modelos</a><ul>
+<li class="chapter" data-level="1.2.1" data-path=""><a href="#identificando-variáveis-no-modelo-que-podem-não-ser-úteis"><i class="fa fa-check"></i><b>1.2.1</b> Identificando variáveis no modelo que podem não ser úteis</a></li>
+<li class="chapter" data-level="1.2.2" data-path=""><a href="#duas-estratégias-de-seleção-de-modelo"><i class="fa fa-check"></i><b>1.2.2</b> Duas estratégias de seleção de modelo</a></li>
+<li class="chapter" data-level="1.2.3" data-path=""><a href="#a-abordagem-do-p-valor-uma-alternativa-para-o-r2-ajustado"><i class="fa fa-check"></i><b>1.2.3</b> A abordagem do p-valor, uma alternativa para o <span class="math inline">\(R^2\)</span> ajustado</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path=""><a href="#multipleRegressionModelAssumptions"><i class="fa fa-check"></i><b>1.3</b> Verificando os pressupostos do modelo usando gráficos</a></li>
+<li class="chapter" data-level="1.4" data-path=""><a href="#logisticRegression"><i class="fa fa-check"></i><b>1.4</b> Introdução à regressão logística</a><ul>
+<li class="chapter" data-level="1.4.1" data-path=""><a href="#dados-e-mail"><i class="fa fa-check"></i><b>1.4.1</b> Dados e-mail</a></li>
+<li class="chapter" data-level="1.4.2" data-path=""><a href="#modelingTheProbabilityOfAnEvent"><i class="fa fa-check"></i><b>1.4.2</b> Modelando a probabilidade de um evento</a></li>
+<li class="chapter" data-level="1.4.3" data-path=""><a href="#decisões-práticas-no-aplicativo-de-e-mail"><i class="fa fa-check"></i><b>1.4.3</b> Decisões práticas no aplicativo de e-mail</a></li>
+<li class="chapter" data-level="1.4.4" data-path=""><a href="#diagnóstico-para-o-classificador-de-e-mail"><i class="fa fa-check"></i><b>1.4.4</b> Diagnóstico para o classificador de e-mail</a></li>
+<li class="chapter" data-level="1.4.5" data-path=""><a href="#improvingTheSetOfVariablesForASpamFilter"><i class="fa fa-check"></i><b>1.4.5</b> Melhorando o conjunto de variáveis para um filtro de spam</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<!--bookdown:title:end-->
+<!--bookdown:title:start-->
+<p><img src="imagem_site_disciplina.png" /></p>
+<div id="prefácio" class="section level1 unnumbered">
+<h1>Prefácio</h1>
+<p>Este material é baseado no livro desenvolvido pela <a href="https://www.openintro.org/">OpenIntro</a>, <a href="https://leanpub.com/openintro-statistics">OpenIntro Statistics</a>, que fornece uma introdução à estatística, a nível de graduação. O material original está disponível no <a href="https://github.com/OpenIntroStat/openintro-statistics">github</a> em formato TeX. Tanto este material adaptado, quanto o original, estão sob mesma licença no <a href="https://creativecommons.org/">Creative Commons</a>.</p>
+<div align="right">
+<strong>Tradução e Adaptação: <br></strong> Juliana Sena de Souza <br> Márcia Helena Barbian <br> Lisiane Priscila Roldão Selau <br> Markus Chagas Stein <br> Rodrigo Citton Padilha dos Reis
+</div>
+<center>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
+</center>
+<p><img src="before_site_disciplina.png" /></p>
+</div>
+<div id="multipleAndLogisticRegression" class="section level1">
+<h1><span class="header-section-number">1</span> Regressão Múltipla e Logística</h1>
+<p>Os princípios da regressão linear simples estabelecem a base para métodos de regressão mais sofisticados usados em uma ampla gama de configurações desafiadoras. Neste capítulo, nós exploramos a <strong>regressão múltipla</strong>, que introduz a possibilidade de mais de um preditor; e a <strong>regressão logística</strong>, uma técnica para prever resultados categóricos com duas categorias possíveis.</p>
+<div id="introductionToMultipleRegression" class="section level2">
+<h2><span class="header-section-number">1.1</span> Introdução à regressão múltipla</h2>
+<p>A regressão múltipla estende a regressão simples de duas variáveis para o caso que ainda tem uma resposta, mas muitos preditores (denotado <span class="math inline">\(X_1, X_2, X_3, \dots\)</span>). O método é motivado por cenários em que muitas variáveis podem ser conectadas simultaneamente a uma saída.</p>
+<p>Vamos considerar leilões Ebay de um videogame chamado <strong>Mario Kart</strong> para o Nintendo Wii. A variável de interesse resultante é o preço total de um leilão, que é o lance mais alto, mais o custo de envio. Vamos tentar determinar como o preço total é relacionado a cada característica em um leilão e simultaneamente controlar outras variáveis. Por exemplo, todas as outras características mantidas constantes são leilões mais longos associados a preços mais altos ou mais baixos? E, em média, quanto mais os compradores tendem a pagar por rodas adicionais do Wii (volantes de plástico que prendem ao controle do Wii) em leilões? A regressão múltipla nos ajudará a responder essas e outras perguntas.</p>
+<p>O conjunto de dados inclui resultados de 141 leilões<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. Quatro observações deste conjunto de dados são mostradas na Tabela <a href="#tab:marioKartDataMatrix">1.1</a> e descrições para cada variável são mostradas na Tabela <a href="#tab:marioKartVariables">1.2</a>. Observe que as variáveis <code>condição</code> e <code>foto stock</code> são variáveis indicadoras. Por exemplo, as variáveis <strong>cond_nova</strong> assume o valor 1 se o jogo em leilão for novo e 0 se for usado. A utilização de variáveis indicadoras no lugar de nomes de categorias permite que essas variáveis sejam usadas diretamente na regressão. A regressão múltipla também permite variáveis categóricas com muitos níveis, embora não tenhamos essas variáveis nessa análise, e salvamos esses detalhes para um segundo ou terceiro curso.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">require</span>(openintro)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">data</span>(<span class="st">&quot;marioKart&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3"></a>
+<a class="sourceLine" id="cb1-4" title="4">temp &lt;-<span class="st"> </span>marioKart[,<span class="kw">c</span>(<span class="st">&#39;totalPr&#39;</span>, <span class="st">&#39;cond&#39;</span>, <span class="st">&#39;stockPhoto&#39;</span>, <span class="st">&#39;duration&#39;</span>, <span class="st">&#39;wheels&#39;</span>)]</a>
+<a class="sourceLine" id="cb1-5" title="5"></a>
+<a class="sourceLine" id="cb1-6" title="6">temp<span class="op">$</span>cond &lt;-<span class="st"> </span><span class="kw">ifelse</span>(temp<span class="op">$</span>cond <span class="op">==</span><span class="st"> &#39;used&#39;</span>, <span class="dv">0</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-7" title="7">temp<span class="op">$</span>stockPhoto &lt;-<span class="st"> </span><span class="kw">ifelse</span>(temp<span class="op">$</span>stockPhoto <span class="op">==</span><span class="st"> &#39;yes&#39;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb1-8" title="8"></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="kw">names</span>(temp) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;preço&#39;</span>, <span class="st">&#39;condição&#39;</span>, <span class="st">&#39;foto&#39;</span>, <span class="st">&#39;duração&#39;</span>, <span class="st">&#39;rodas&#39;</span>)</a>
+<a class="sourceLine" id="cb1-10" title="10"></a>
+<a class="sourceLine" id="cb1-11" title="11"></a>
+<a class="sourceLine" id="cb1-12" title="12"></a>
+<a class="sourceLine" id="cb1-13" title="13">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(temp, <span class="dv">4</span>), <span class="dt">caption =</span> <span class="st">&#39;Quatro observações do conjunto de dados Mario Kart&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:marioKartDataMatrix">Tabela 1.1: </span>Quatro observações do conjunto de dados Mario Kart</caption>
+<thead>
+<tr class="header">
+<th align="right">preço</th>
+<th align="right">condição</th>
+<th align="right">foto</th>
+<th align="right">duração</th>
+<th align="right">rodas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">51.55</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">37.04</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">7</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">45.50</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">44.00</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">descs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;preço do leilão final mais custo de transporte, em dólares americanos&#39;</span>,</a>
+<a class="sourceLine" id="cb2-2" title="2">           <span class="st">&#39;a variável categória, que é 1 quando o jogo é novo e 0 se usado&#39;</span>,</a>
+<a class="sourceLine" id="cb2-3" title="3">           <span class="st">&#39;a variável categórica, que é 1 se a foto principal do leilão era uma foto do estoque e 0 se fosse única para aquele leilão&#39;</span>,</a>
+<a class="sourceLine" id="cb2-4" title="4">           <span class="st">&#39;duração do leilão em dias, valores entre 1 a 10&#39;</span>, </a>
+<a class="sourceLine" id="cb2-5" title="5">           <span class="st">&#39;o número de rodas de Wii incluídas na seção (uma roda de wii é um acessório em formato de roda para auxiliar ao jogar Mario Kart Wii&#39;</span>)</a>
+<a class="sourceLine" id="cb2-6" title="6"></a>
+<a class="sourceLine" id="cb2-7" title="7">table2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">cbind</span>(<span class="kw">names</span>(temp), descs))</a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="kw">names</span>(table2) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Variável&#39;</span>, <span class="st">&#39;Descrição&#39;</span>)</a>
+<a class="sourceLine" id="cb2-9" title="9"></a>
+<a class="sourceLine" id="cb2-10" title="10">knitr<span class="op">::</span><span class="kw">kable</span>(table2, <span class="dt">align =</span> <span class="st">&#39;r&#39;</span>, </a>
+<a class="sourceLine" id="cb2-11" title="11">             <span class="dt">caption =</span> <span class="st">&#39;Variáveis e suas descrições para o conjunto de dados Mario Kart&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:marioKartVariables">Tabela 1.2: </span>Variáveis e suas descrições para o conjunto de dados Mario Kart</caption>
+<thead>
+<tr class="header">
+<th align="right">Variável</th>
+<th align="right">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">preço</td>
+<td align="right">preço do leilão final mais custo de transporte, em dólares americanos</td>
+</tr>
+<tr class="even">
+<td align="right">condição</td>
+<td align="right">a variável categória, que é 1 quando o jogo é novo e 0 se usado</td>
+</tr>
+<tr class="odd">
+<td align="right">foto</td>
+<td align="right">a variável categórica, que é 1 se a foto principal do leilão era uma foto do estoque e 0 se fosse única para aquele leilão</td>
+</tr>
+<tr class="even">
+<td align="right">duração</td>
+<td align="right">duração do leilão em dias, valores entre 1 a 10</td>
+</tr>
+<tr class="odd">
+<td align="right">rodas</td>
+<td align="right">o número de rodas de Wii incluídas na seção (uma roda de wii é um acessório em formato de roda para auxiliar ao jogar Mario Kart Wii</td>
+</tr>
+</tbody>
+</table>
+<div id="twoSingleVariableModelsForMarioKartData" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> Um modelo de variável única para os dados do Mario Kart</h3>
+<p>Vamos ajustar um modelo de regressão linear com a condição do jogo como um preditor do preço do leilão. O modelo pode ser escrito como</p>
+<p><span class="math display">\[\begin{align*}
+\widehat{preço} &amp;= 42.87 + 10.90\times cond\_\hspace{0.3mm}nova
+\end{align*}\]</span></p>
+<p>Os resultados deste modelo são mostrados na Tabela <a href="#tab:singleVarModelsForPriceUsingCond">1.3</a> e um gráfico de dispersão por preço <em>versus</em> condição de jogo é mostrado na Figura <a href="#fig:marioKartSingle">1.1</a>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">data</span>(marioKart)</a>
+<a class="sourceLine" id="cb3-2" title="2">d &lt;-<span class="st"> </span>marioKart[marioKart<span class="op">$</span>totalPr <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>,]</a>
+<a class="sourceLine" id="cb3-3" title="3">d<span class="op">$</span>cond &lt;-<span class="st"> </span><span class="kw">ifelse</span>(d<span class="op">$</span>cond <span class="op">==</span><span class="st"> &#39;used&#39;</span>, <span class="dv">0</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb3-4" title="4">g &lt;-<span class="st"> </span><span class="kw">lm</span>(totalPr <span class="op">~</span><span class="st"> </span>cond, <span class="dt">data =</span> d)</a>
+<a class="sourceLine" id="cb3-5" title="5"></a>
+<a class="sourceLine" id="cb3-6" title="6">table3 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">summary</span>(g)<span class="op">$</span>coefficients)</a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="kw">names</span>(table3) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Estimativa&#39;</span>, <span class="st">&#39;Erro Padrão&#39;</span>, <span class="st">&#39;Valor t&#39;</span>, <span class="st">&#39;Pr(&gt;|t|)&#39;</span>)</a>
+<a class="sourceLine" id="cb3-8" title="8"><span class="kw">rownames</span>(table3) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;(Intercepto)&#39;</span>, <span class="st">&#39;Condição&#39;</span>)</a>
+<a class="sourceLine" id="cb3-9" title="9"></a>
+<a class="sourceLine" id="cb3-10" title="10">knitr<span class="op">::</span><span class="kw">kable</span>(table3, <span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">align =</span> <span class="st">&#39;c&#39;</span>, </a>
+<a class="sourceLine" id="cb3-11" title="11">             <span class="dt">caption =</span> <span class="st">&#39;Resumo de um modelo linear para prever o preço do leilão com base na condição do jogo.&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:singleVarModelsForPriceUsingCond">Tabela 1.3: </span>Resumo de um modelo linear para prever o preço do leilão com base na condição do jogo.</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">Estimativa</th>
+<th align="center">Erro Padrão</th>
+<th align="center">Valor t</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(Intercepto)</td>
+<td align="center">42.871</td>
+<td align="center">0.814</td>
+<td align="center">52.668</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td>Condição</td>
+<td align="center">10.900</td>
+<td align="center">1.258</td>
+<td align="center">8.662</td>
+<td align="center">0</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">library</span>(openintro)</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw">data</span>(marioKart)</a>
+<a class="sourceLine" id="cb4-3" title="3">mk      &lt;-<span class="st"> </span>marioKart[marioKart<span class="op">$</span>totalPr <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>, ]</a>
+<a class="sourceLine" id="cb4-4" title="4">mk<span class="op">$</span>cond &lt;-<span class="st"> </span><span class="kw">relevel</span>(mk<span class="op">$</span>cond, <span class="st">&quot;used&quot;</span>)</a>
+<a class="sourceLine" id="cb4-5" title="5">cond &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">ifelse</span>(mk<span class="op">$</span>cond <span class="op">==</span><span class="st"> &quot;new&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb4-6" title="6"></a>
+<a class="sourceLine" id="cb4-7" title="7">g &lt;-<span class="st"> </span><span class="kw">lm</span>(mk<span class="op">$</span>totalPr <span class="op">~</span><span class="st"> </span>cond)</a>
+<a class="sourceLine" id="cb4-8" title="8"></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="kw">as.factor</span>(cond), mk<span class="op">$</span>totalPr)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">size =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&#39;Preço Total&#39;</span>, <span class="dt">x =</span> <span class="st">&#39;Condição&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-13" title="13"><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> g<span class="op">$</span>coefficients[<span class="dv">2</span>], <span class="dt">intercept =</span> g<span class="op">$</span>coefficients[<span class="dv">1</span>])</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:marioKartSingle"></span>
+<img src="ch8_reg_mult_log_files/figure-html/marioKartSingle-1.png" alt="Gráfico de dispersão do preço total do leilão contra a condição do jogo. A linha dos mínimos quadrados também é mostrada." width="100%" height="30%" />
+<p class="caption">
+Figura 1.1: Gráfico de dispersão do preço total do leilão contra a condição do jogo. A linha dos mínimos quadrados também é mostrada.
+</p>
+</div>
+<hr />
+
+<div class="exercise">
+<span id="exr:unnamed-chunk-2" class="exercise"><strong>Prática Orientada 1.1  </strong></span>
+Examine a Figura <a href="#fig:marioKartSingle">1.1</a>. O modelo linear parece razoável?<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>
+</div>
+
+<hr />
+
+<div class="example">
+<span id="exm:unnamed-chunk-3" class="example"><strong>Exemplo 1.1  </strong></span>Interprete o coeficiente para a condição do jogo no modelo. Este coeficiente é significativamente diferente de 0?
+</div>
+
+<p>Note que <code>condição</code> é uma variável categórica de dois níveis que recebe o valor 1 quando o jogo é novo e o valor 0 quando o jogo é usado. Então, 10.90 significa que o modelo prevê um extra de $10. 90 para aqueles jogos que são novos versus aqueles que são usados. Examinando a saída de regressão na Tabela <a href="#tab:singleVarModelsForPriceUsingCond">1.3</a>, podemos ver que o p-valor para <code>condição</code> é muito próximo de zero, indicando que há fortes evidências de que o coeficiente é diferente de zero ao usar esse modelo simples de uma variável.</p>
+</div>
+<div id="includingAndAssessingManyVariablesInAModel" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> Incluindo e avaliando muitas variáveis em um modelo</h3>
+<p>Às vezes, há estruturas subjacentes ou relacionamentos entre variáveis preditoras. Por exemplo, os novos jogos vendidos no Ebay tendem a vir com mais rodas do Wii, o que pode ter levado a preços mais altos para esses leilões. Gostaríamos de encaixar um modelo que inclua todas as variáveis potencialmente importantes simultaneamente. Isso nos ajudaria a avaliar a relação entre uma variável preditora e o resultado enquanto controlamos a influência potencial de outras variáveis. Essa é a estratégia usada na <strong>regressão múltipla</strong>. Embora permaneçamos cautelosos em fazer quaisquer interpretações causais usando a regressão múltipla, tais modelos são um primeiro passo comum no fornecimento de evidências de uma conexão causal.</p>
+<p>Queremos construir um modelo que responda não apenas à condição do jogo, mas simultaneamente responde por três outras variáveis: <code>foto_stock</code>, <code>duração</code>, e <code>rodas</code>.</p>
+<p><span class="math display" id="eq:eqForMultipleRegrOfTotalPrForAllPredictors">\[\begin{align}
+\widehat{preço}
+    &amp;= \beta_0 + \beta_1\times cond\_nova +
+        \beta_2\times foto\_stock \notag \\
+    &amp;\qquad\  + \beta_3 \times  duração +
+        \beta_4 \times  rodas \notag \\
+\hat{y}
+    &amp;= \beta_0 + \beta_1 x_1 + \beta_2 x_2 +
+        \beta_3 x_3 + \beta_4 x_4
+\tag{1.1}
+\end{align}\]</span></p>
+<p>Nesta equação, <span class="math inline">\(Y\)</span> representa o preço total, <span class="math inline">\(X_1\)</span> indica se o jogo é novo, <span class="math inline">\(X_2\)</span> indica se uma foto foi usada, <span class="math inline">\(X_3\)</span> é a duração do leilão e <span class="math inline">\(X_4\)</span> é o número de rodas de Wii incluídas no jogo. Assim como no caso do preditor único, um modelo de regressão múltipla pode estar faltando componentes importantes ou pode não representar precisamente a relação entre o resultado e as variáveis explicativas disponíveis. Enquanto nenhum modelo é perfeito, nós desejamos explorar a possibilidade de que este possa encaixar os dados razoavelmente bem.</p>
+<p>Nós estimamos os parâmetros <span class="math inline">\(\beta_0, \beta_1,\dots, \beta_4\)</span> da mesma forma que fizemos no caso de um único preditor. Nós selecionamos <span class="math inline">\(b_0, b_1, \dots, b_4\)</span> que minimizam a soma dos resíduos quadrados:</p>
+<p><span class="math display" id="eq:sumOfSqResInMultRegr">\[\begin{align}
+SSE = e_1^2 + e_2^2 + \dots + e_{141}^2
+      = \sum_{i=1}^{141} e_i^2
+      = \sum_{i=1}^{141} \left(y_i - \hat{y}_i\right)^2
+\tag{1.2}
+\end{align}\]</span></p>
+<p>Aqui há 141 resíduos, um para cada observação. Normalmente usamos um computador para minimizar a soma na Equação <a href="#eq:sumOfSqResInMultRegr">(1.2)</a> e calcular estimativas pontuais, como mostrado na saída da amostra na Tabela <a href="#tab:outputForMultipleRegrOutputForAllPredictors">1.4</a>. Usando essa saída, identificamos as estimativas pontuais <span class="math inline">\(b_i\)</span> de cada <span class="math inline">\(\beta_i\)</span>, assim como fizemos no caso de um preditor.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">d<span class="op">$</span>stockPhoto &lt;-<span class="st"> </span><span class="kw">ifelse</span>(d<span class="op">$</span>stockPhoto <span class="op">==</span><span class="st"> &#39;yes&#39;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb5-2" title="2"></a>
+<a class="sourceLine" id="cb5-3" title="3">g &lt;-<span class="st"> </span><span class="kw">lm</span>(totalPr <span class="op">~</span><span class="st"> </span>cond <span class="op">+</span><span class="st"> </span>stockPhoto <span class="op">+</span><span class="st"> </span>duration <span class="op">+</span><span class="st"> </span>wheels, <span class="dt">data =</span> d)</a>
+<a class="sourceLine" id="cb5-4" title="4"></a>
+<a class="sourceLine" id="cb5-5" title="5">table4 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">summary</span>(g)<span class="op">$</span>coefficients)</a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="kw">names</span>(table4) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Estimativa&#39;</span>, <span class="st">&#39;Erro Padrão&#39;</span>, <span class="st">&#39;Valor t&#39;</span>, <span class="st">&#39;Pr(&gt;|t|)&#39;</span>)</a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="kw">rownames</span>(table4) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;(Intercepto)&#39;</span>, <span class="st">&#39;Condição&#39;</span>, <span class="st">&#39;Foto&#39;</span>, <span class="st">&#39;Duração&#39;</span>, <span class="st">&#39;Rodas&#39;</span>)</a>
+<a class="sourceLine" id="cb5-8" title="8"></a>
+<a class="sourceLine" id="cb5-9" title="9"></a>
+<a class="sourceLine" id="cb5-10" title="10">knitr<span class="op">::</span><span class="kw">kable</span>(table4, <span class="dt">align =</span> <span class="st">&#39;c&#39;</span>, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">caption =</span> <span class="st">&#39;Saída para o modelo de regressão onde preço é o resultado e condição, foto, duração e rodas são os preditores.&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:outputForMultipleRegrOutputForAllPredictors">Tabela 1.4: </span>Saída para o modelo de regressão onde preço é o resultado e condição, foto, duração e rodas são os preditores.</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">Estimativa</th>
+<th align="center">Erro Padrão</th>
+<th align="center">Valor t</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(Intercepto)</td>
+<td align="center">36.2110</td>
+<td align="center">1.5140</td>
+<td align="center">23.9173</td>
+<td align="center">0.0000</td>
+</tr>
+<tr class="even">
+<td>Condição</td>
+<td align="center">5.1306</td>
+<td align="center">1.0511</td>
+<td align="center">4.8810</td>
+<td align="center">0.0000</td>
+</tr>
+<tr class="odd">
+<td>Foto</td>
+<td align="center">1.0803</td>
+<td align="center">1.0568</td>
+<td align="center">1.0222</td>
+<td align="center">0.3085</td>
+</tr>
+<tr class="even">
+<td>Duração</td>
+<td align="center">-0.0268</td>
+<td align="center">0.1904</td>
+<td align="center">-0.1408</td>
+<td align="center">0.8882</td>
+</tr>
+<tr class="odd">
+<td>Rodas</td>
+<td align="center">7.2852</td>
+<td align="center">0.5547</td>
+<td align="center">13.1337</td>
+<td align="center">0.0000</td>
+</tr>
+</tbody>
+</table>
+<div class="alert alert-info">
+<p><strong>Modelo de Regressão Múltipla</strong>: Um modelo de regressão múltipla é um modelo linear com muitos preditores. Em geral, escrevemos o modelo como</p>
+<p><span class="math display">\[\begin{align*}
+\hat{y} = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_k x_k %+ \epsilon
+\end{align*}\]</span></p>
+<p>quando há <span class="math inline">\(k\)</span> preditores. Costumamos estimar os parâmetros <span class="math inline">\(\beta_i\)</span> usando um computador.</p>
+</div>
+<hr />
+
+<div class="exercise">
+<span id="exr:eqForMultipleRegrOfTotalPrForAllPredictorsWithCoefficients" class="exercise"><strong>Prática Orientada 1.2  </strong></span>Escreva o modelo na Equação <a href="#eq:eqForMultipleRegrOfTotalPrForAllPredictors">(1.1)</a> usando as estimativas pontuais da Tabela <a href="#tab:outputForMultipleRegrOutputForAllPredictors">1.4</a>. Quantos preditores existem neste modelo?<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>
+</div>
+
+<hr />
+<hr />
+
+<div class="exercise">
+<span id="exr:unnamed-chunk-4" class="exercise"><strong>Prática Orientada 1.3  </strong></span>O que <span class="math inline">\(\beta_4\)</span>, o coeficiente da variável <span class="math inline">\(x_4\)</span> (rodas Wii), representa? Qual é a estimativa pontual de <span class="math inline">\(\beta_4\)</span>?<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>
+</div>
+
+<hr />
+<hr />
+
+<div class="exercise">
+<span id="exr:computeMultipleRegressionResidualForMarioKart" class="exercise"><strong>Prática Orientada 1.4  </strong></span>Calcule o resíduo da primeira observação na Tabela <a href="#tab:marioKartDataMatrix">1.1</a> usando a equação identificada na Prática Orientada <a href="#exr:eqForMultipleRegrOfTotalPrForAllPredictorsWithCoefficients">1.2</a>.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>
+</div>
+
+<hr />
+
+<div class="example">
+<span id="exm:colinearityOfCondNewAndStockPhoto" class="example"><strong>Exemplo 1.2  </strong></span>Estimamos um coeficiente para <code>condição</code> na Seção <a href="#twoSingleVariableModelsForMarioKartData">1.1.1</a> de <span class="math inline">\(b_1 = 10,90\)</span> com um erro padrão <span class="math inline">\(EP_{b_1} = 1,26\)</span> ao usar regressão linear simples. Por que pode haver uma diferença entre essa estimativa e aquela na configuração de regressão múltipla?
+</div>
+
+<p>Se examinássemos os dados cuidadosamente, veríamos que alguns preditores estão correlacionados. Por exemplo, quando estimamos a conexão do resultado <code>preço</code> e o preditor <code>condição</code> usando a regressão linear simples, não conseguimos controlar outras variáveis, como o número de rodas Wii incluídas no leilão. Esse modelo foi influenciado pela variável de confusão <code>rodas</code>. Quando usamos as duas variáveis, esse viés subjacente e não intencional específico é reduzido ou eliminado (embora viés de outras variáveis confusas ainda possa permanecer).</p>
+<p>Exemplo <a href="#exm:colinearityOfCondNewAndStockPhoto">1.2</a> descreve um problema comum em regressão múltipla: correlação entre variáveis preditoras. Dizemos que as duas variáveis preditoras são <strong>colineares</strong> (pronunciado como co-lineares) quando eles são correlacionados e essa colinearidade complica a estimação do modelo. Embora seja impossível evitar que a colinearidade surja em dados observacionais, os experimentos geralmente são projetados para impedir que os preditores sejam colineares.</p>
+<hr />
+
+<div class="exercise">
+<span id="exr:unnamed-chunk-5" class="exercise"><strong>Prática Orientada 1.5  </strong></span>O valor estimado do intercepto é 36,21, e pode-se ficar tentado a fazer alguma interpretação desse coeficiente, tal como, é o preço previsto do modelo quando cada uma das variáveis toma o valor zero: o jogo é usado, a imagem primária não é uma foto de estoque, a duração do leilão é de zero dias, e não há rodas incluídas. Existe algum ganho ao fazer essa interpretação?<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>
+</div>
+
+<hr />
+</div>
+<div id="r2-ajustado-como-melhor-estimativa-da-variância-explicada" class="section level3">
+<h3><span class="header-section-number">1.1.3</span> <span class="math inline">\(R^2\)</span> ajustado como melhor estimativa da variância explicada</h3>
+<p>Nós usamos pela primeira vez <span class="math inline">\(R^2\)</span> para determinar a quantidade de variabilidade na resposta que foi explicada pelo modelo:</p>
+<p><span class="math display">\[\begin{align*}
+R^2 = 1 - \frac{\text{variabilidade nos resíduos}}{\text{variabilidade no resultado}}
+    = 1 - \frac{Var(e_i)}{Var(y_i)}
+\end{align*}\]</span></p>
+<p>onde <span class="math inline">\(e_i\)</span> representa os resíduos do modelo e <span class="math inline">\(y_i\)</span> os resultados. Esta equação permanece válida na estrutura de regressão múltipla, mas um pequeno aprimoramento pode ser ainda mais informativo.</p>
+<hr />
+
+<div class="exercise">
+<span id="exr:computeUnadjustedR2ForAllPredictorsInMarioKart" class="exercise"><strong>Prática Orientada 1.6  </strong></span>A variância dos resíduos para o modelo dado na Prática Orientada <a href="#exr:computeMultipleRegressionResidualForMarioKart">1.4</a> é 23,34 e a variação do preço total em todos os leilões é de 83,06. Calcule <span class="math inline">\(R^2\)</span> para este modelo.<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>
+</div>
+
+<hr />
+<p>Essa estratégia para estimar <span class="math inline">\(R^2\)</span> é aceitável quando há apenas uma única variável. No entanto, torna-se menos útil quando existem muitas variáveis. O <span class="math inline">\(R^2\)</span> regular é uma estimativa menor da quantidade de variabilidade explicada pelo modelo. Para obter uma estimativa melhor, usamos o valor ajustado de <span class="math inline">\(R^2\)</span>.</p>
+<div class="alert alert-info">
+<p><strong><span class="math inline">\(\mathbf{R^2}\)</span> ajustado como uma ferramenta para avaliação de modelo</strong>: O <span class="math inline">\(\mathbf{R^2}\)</span> ajustado é calculado como</p>
+<p><span class="math display">\[\begin{align*}
+R_{aj}^{2} = 1-\frac{Var(e_i) / (n-k-1)}{Var(y_i) / (n-1)}
+    = 1-\frac{Var(e_i)}{Var(y_i)} \times \frac{n-1}{n-k-1}
+\end{align*}\]</span></p>
+<p>onde <span class="math inline">\(n\)</span> é o número de casos usados para ajustar o modelo e <span class="math inline">\(k\)</span> é o número de variáveis preditoras no modelo.</p>
+</div>
+<p>Como <span class="math inline">\(k\)</span> nunca é negativo, o <span class="math inline">\(R^2\)</span> ajustado será menor – muitas vezes um pouco menor – do que o <span class="math inline">\(R^2\)</span> não ajustado. O raciocínio por trás do <span class="math inline">\(R^2\)</span> ajustado está nos <strong>graus de liberdade</strong> associados a cada variação.<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a></p>
+<hr />
+
+<div class="exercise">
+<span id="exr:unnamed-chunk-6" class="exercise"><strong>Prática Orientada 1.7  </strong></span>Houve <span class="math inline">\(n=141\)</span> leilões no conjunto de dados e <span class="math inline">\(k=4\)</span> variáveis preditoras no modelo. Use <span class="math inline">\(n\)</span>, <span class="math inline">\(k\)</span> e as variações da Prática Orientada <a href="#exr:computeUnadjustedR2ForAllPredictorsInMarioKart">1.6</a> para calcular o <span class="math inline">\(R_{aj}^2\)</span> para o modelo Mario Kart.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>
+</div>
+
+<hr />
+<hr />
+
+<div class="exercise">
+<span id="exr:unnamed-chunk-7" class="exercise"><strong>Prática Orientada 1.8  </strong></span>Suponha que você tenha adicionado outro preditor ao modelo, mas a variância dos erros <span class="math inline">\(Var(e_i)\)</span> não caiu. O que aconteceria com o <span class="math inline">\(R^2\)</span>? O que aconteceria com o <span class="math inline">\(R^2\)</span> ajustado?<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a>
+</div>
+
+<hr />
+<p><span class="math inline">\(R^2\)</span> ajustado poderia ter sido usado na regressão linear simples. No entanto, quando há apenas <span class="math inline">\(k=1\)</span> preditores, o ajuste <span class="math inline">\(R^2\)</span> está muito próximo do valor normal de <span class="math inline">\(R^2\)</span>, portanto, essa nuance não é normalmente importante quando se considera apenas um preditor.</p>
+</div>
+</div>
+<div id="modelSelection" class="section level2">
+<h2><span class="header-section-number">1.2</span> Seleção de modelos</h2>
+<p>O melhor modelo nem sempre é o mais complicado. Às vezes, incluir variáveis que não são evidentemente importantes pode reduzir a precisão das previsões. Nesta seção, discutiremos as estratégias de seleção de modelos, que nos ajudarão a eliminar as variáveis do modelo que são consideradas menos importantes.</p>
+<p>Na prática, o modelo que inclui todas as variáveis explicativas disponíveis é geralmente chamado de <strong>modelo completo</strong>. O modelo completo pode não ser o melhor modelo e, se não for, queremos identificar um modelo menor que seja preferível.</p>
+<div id="identificando-variáveis-no-modelo-que-podem-não-ser-úteis" class="section level3">
+<h3><span class="header-section-number">1.2.1</span> Identificando variáveis no modelo que podem não ser úteis</h3>
+<p>O <span class="math inline">\(R^2\)</span> ajustado descreve a força de um ajuste de modelo e é uma ferramenta útil para avaliar quais preditores estão adicionando valor ao modelo, em que <em>adicionando valor</em> significa que eles estão (provavelmente) melhorando a precisão na previsão de resultados.</p>
+<p>Vamos considerar dois modelos, que são mostrados nas Tabelas <a href="#tab:outputForMultipleRegrOutputForAllPredictors2">1.5</a> e <a href="#tab:marioKartMultipleRegressionModelAllButDuration">1.6</a>. A primeira tabela resume o modelo completo já que inclui todos preditores, enquanto a segunda não inclui a variável <code>duração</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">table5 &lt;-<span class="st"> </span>table4</a>
+<a class="sourceLine" id="cb6-2" title="2">table5[<span class="dv">6</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.7108</span>, <span class="st">&#39;&#39;</span>, <span class="st">&#39;&#39;</span>, <span class="st">&#39;&#39;</span>)</a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="kw">rownames</span>(table5) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rownames</span>(table4), <span class="st">&#39;R² adj&#39;</span>)</a>
+<a class="sourceLine" id="cb6-4" title="4"></a>
+<a class="sourceLine" id="cb6-5" title="5">knitr<span class="op">::</span><span class="kw">kable</span>(table5, <span class="dt">digits =</span> <span class="dv">3</span>, </a>
+<a class="sourceLine" id="cb6-6" title="6">             <span class="dt">caption =</span> <span class="st">&#39;O ajuste para o modelo de regressão completo, incluindo o valor ajustado de R2&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:outputForMultipleRegrOutputForAllPredictors2">Tabela 1.5: </span>O ajuste para o modelo de regressão completo, incluindo o valor ajustado de R2</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">Estimativa</th>
+<th align="left">Erro Padrão</th>
+<th align="left">Valor t</th>
+<th align="left">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(Intercepto)</td>
+<td align="left">36.2109676898294</td>
+<td align="left">1.51400736232875</td>
+<td align="left">23.9172996055528</td>
+<td align="left">1.43474549520979e-50</td>
+</tr>
+<tr class="even">
+<td>Condição</td>
+<td align="left">5.1305641413385</td>
+<td align="left">1.05112377996932</td>
+<td align="left">4.88102756222323</td>
+<td align="left">2.9118528276758e-06</td>
+</tr>
+<tr class="odd">
+<td>Foto</td>
+<td align="left">1.08031083132648</td>
+<td align="left">1.05682382243593</td>
+<td align="left">1.02222414785883</td>
+<td align="left">0.308489715468975</td>
+</tr>
+<tr class="even">
+<td>Duração</td>
+<td align="left">-0.0268075265758599</td>
+<td align="left">0.190412204307907</td>
+<td align="left">-0.14078680866753</td>
+<td align="left">0.888246676521142</td>
+</tr>
+<tr class="odd">
+<td>Rodas</td>
+<td align="left">7.28517787447181</td>
+<td align="left">0.554692763155475</td>
+<td align="left">13.1337171825151</td>
+<td align="left">5.88815545183586e-26</td>
+</tr>
+<tr class="even">
+<td>R² adj</td>
+<td align="left">0.7108</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">g &lt;-<span class="st"> </span><span class="kw">lm</span>(totalPr <span class="op">~</span><span class="st"> </span>cond <span class="op">+</span><span class="st"> </span>stockPhoto <span class="op">+</span><span class="st"> </span>wheels, <span class="dt">data =</span> d)</a>
+<a class="sourceLine" id="cb7-2" title="2"></a>
+<a class="sourceLine" id="cb7-3" title="3">table6 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">summary</span>(g)<span class="op">$</span>coefficients)</a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="kw">colnames</span>(table6) &lt;-<span class="st"> </span><span class="kw">colnames</span>(table5)</a>
+<a class="sourceLine" id="cb7-5" title="5">table6[<span class="dv">5</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.7128</span>, <span class="st">&#39;&#39;</span>, <span class="st">&#39;&#39;</span>, <span class="st">&#39;&#39;</span>)</a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="kw">rownames</span>(table6) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;(Intercepto)&#39;</span>, <span class="st">&#39;Condição&#39;</span>, <span class="st">&#39;Foto&#39;</span>, <span class="st">&#39;Rodas&#39;</span>, <span class="st">&#39;R² adj&#39;</span>)</a>
+<a class="sourceLine" id="cb7-7" title="7"></a>
+<a class="sourceLine" id="cb7-8" title="8"></a>
+<a class="sourceLine" id="cb7-9" title="9">knitr<span class="op">::</span><span class="kw">kable</span>(table6, <span class="dt">digits =</span> <span class="dv">3</span>, </a>
+<a class="sourceLine" id="cb7-10" title="10">             <span class="dt">caption =</span> <span class="st">&#39;O ajuste para o modelo de regressão para preditores condição, foto e rodas.&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:marioKartMultipleRegressionModelAllButDuration">Tabela 1.6: </span>O ajuste para o modelo de regressão para preditores condição, foto e rodas.</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">Estimativa</th>
+<th align="left">Erro Padrão</th>
+<th align="left">Valor t</th>
+<th align="left">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(Intercepto)</td>
+<td align="left">36.0482594605983</td>
+<td align="left">0.974534241530486</td>
+<td align="left">36.990244082122</td>
+<td align="left">3.56292749762384e-73</td>
+</tr>
+<tr class="even">
+<td>Condição</td>
+<td align="left">5.17628493762871</td>
+<td align="left">0.996115990095376</td>
+<td align="left">5.19646807108587</td>
+<td align="left">7.20833738482275e-07</td>
+</tr>
+<tr class="odd">
+<td>Foto</td>
+<td align="left">1.11772350720387</td>
+<td align="left">1.01920230037228</td>
+<td align="left">1.09666501615588</td>
+<td align="left">0.274711788879748</td>
+</tr>
+<tr class="even">
+<td>Rodas</td>
+<td align="left">7.29835578073536</td>
+<td align="left">0.544778931497094</td>
+<td align="left">13.3969126902153</td>
+<td align="left">1.11044292656473e-26</td>
+</tr>
+<tr class="odd">
+<td>R² adj</td>
+<td align="left">0.7128</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+
+<div class="example">
+<span id="exm:unnamed-chunk-8" class="example"><strong>Exemplo 1.3  </strong></span>Qual dos dois modelos é melhor?
+</div>
+
+<p>Nós comparamos o <span class="math inline">\(R^2\)</span> ajustado de cada modelo para determinar qual escolher. O primeiro modelo tem um <span class="math inline">\(R^2_{aj}\)</span> menor que o <span class="math inline">\(R^2_{aj}\)</span> do segundo modelo, então preferimos o segundo modelo ao primeiro.</p>
+<p>Será que o modelo sem <code>duração</code> é melhor do que o modelo com <code>duração</code>? Nós não podemos ter certeza, mas com base no <span class="math inline">\(R^2\)</span> ajustado, esta é a nossa melhor avaliação.</p>
+</div>
+<div id="duas-estratégias-de-seleção-de-modelo" class="section level3">
+<h3><span class="header-section-number">1.2.2</span> Duas estratégias de seleção de modelo</h3>
+<p>Duas estratégias comuns para adicionar ou remover variáveis em um modelo de regressão múltipla são chamadas de <strong>eliminação regressiva</strong> e <strong>seleção progressiva</strong>. Essas técnicas são frequentemente chamadas de estratégias de seleção de modelos <em>gradual</em>, porque elas adicionam ou excluem uma variável de cada vez, conforme elas “escalam” os preditores candidatos.</p>
+<p><strong>Eliminação regressiva</strong> (backward elimination) começa com o modelo que inclui todas as possíveis variáveis preditoras. As variáveis são eliminadas uma por vez do modelo até que não possamos melhorar o <span class="math inline">\(R^2\)</span> ajustado. A estratégia dentro de cada etapa de eliminação é eliminar a variável que leva à maior melhoria no <span class="math inline">\(R^2\)</span> ajustado.</p>
+
+<div class="example">
+<span id="exm:backwardEliminationExampleWMarioKartData" class="example"><strong>Exemplo 1.4  </strong></span>Resultados correspondentes ao modelo completo para os dados são mostrados na Tabela <a href="#tab:outputForMultipleRegrOutputForAllPredictors2">1.5</a>. Como devemos proceder com a estratégia de eliminação regressiva?
+</div>
+
+<p>Nossa linha de base para o <span class="math inline">\(R^2\)</span> ajustado do modelo completo é <span class="math inline">\(R^2_{aj} = 0,7108\)</span>, e precisamos determinar se descartar um preditor melhorará o <span class="math inline">\(R^2\)</span> ajustado. Para verificar, ajustamos quatro modelos, cada um com um preditor diferente, e registramos os <span class="math inline">\(R^2\)</span> ajustados de cada:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">R &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="fl">0.6626</span>, <span class="fl">0.7107</span>, <span class="fl">0.7128</span>, <span class="fl">0.3487</span>), <span class="dt">ncol =</span> <span class="dv">4</span>, <span class="dt">nrow =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="kw">rownames</span>(R) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;R² aj&#39;</span>)</a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="kw">colnames</span>(R) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;condição&#39;</span>, <span class="st">&#39;foto&#39;</span>, <span class="st">&#39;duração&#39;</span>, <span class="st">&#39;rodas&#39;</span>)</a>
+<a class="sourceLine" id="cb8-4" title="4"></a>
+<a class="sourceLine" id="cb8-5" title="5">knitr<span class="op">::</span><span class="kw">kable</span>(R)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">condição</th>
+<th align="right">foto</th>
+<th align="right">duração</th>
+<th align="right">rodas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>R² aj</td>
+<td align="right">0.6626</td>
+<td align="right">0.7107</td>
+<td align="right">0.7128</td>
+<td align="right">0.3487</td>
+</tr>
+</tbody>
+</table>
+<p>O terceiro modelo sem <code>duração</code> tem o maior <span class="math inline">\(R^2\)</span> ajustado de 0.7128, então nós o comparamos com o <span class="math inline">\(R^2\)</span> ajustado para o modelo completo. Porque eliminando <code>duração</code> leva a um modelo com um maior <span class="math inline">\(R^2\)</span> ajustado, nóstiramos <code>duração</code> do modelo.</p>
+<p>Como eliminamos um preditor do modelo na primeira etapa, vemos se devemos eliminar quaisquer preditores adicionais. Nossa linha de base ajustada <span class="math inline">\(R^2\)</span> é agora <span class="math inline">\(R^2_{aj} = 0.7128\)</span>. Agora, encaixamos três novos modelos, que consideram a eliminação de cada um dos três preditores restantes:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">R_v2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="fl">0.6587</span>, <span class="fl">0.7124</span>, <span class="fl">0.3414</span>), <span class="dt">ncol =</span> <span class="dv">3</span>, <span class="dt">nrow =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="kw">rownames</span>(R_v2) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;R² aj&#39;</span>)</a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="kw">colnames</span>(R_v2) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;condição&#39;</span>, <span class="st">&#39;foto&#39;</span>, <span class="st">&#39;rodas&#39;</span>)</a>
+<a class="sourceLine" id="cb9-4" title="4"></a>
+<a class="sourceLine" id="cb9-5" title="5">knitr<span class="op">::</span><span class="kw">kable</span>(R_v2)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">condição</th>
+<th align="right">foto</th>
+<th align="right">rodas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>R² aj</td>
+<td align="right">0.6587</td>
+<td align="right">0.7124</td>
+<td align="right">0.3414</td>
+</tr>
+</tbody>
+</table>
+<p>Nenhum desses modelos leva a uma melhoria do <span class="math inline">\(R^2\)</span> ajustado, portanto, não eliminamos nenhum dos preditores restantes. Ou seja, após a eliminação regressiva, ficamos com o modelo que mantém condição, foto e rodas, que podemos resumir usando os coeficientes da Tabela <a href="#tab:marioKartMultipleRegressionModelAllButDuration">1.6</a>:</p>
+<p><span class="math display">\[\begin{align*}
+\hat{y} \ &amp;= \ b_0 + b_1x_1 + b_2x_2 + b_4x_4 \\
+\widehat{preço} &amp;= \ 36,05 + 5,18 \times \text{cond\_nova} + 1,12 \times \textfoto\_stock} + 7,30 \times \text{rodas}
+\end{align*}\]</span></p>
+<p>A estratégia de <strong>seleção progressiva</strong> é o reverso da técnica de eliminação regressiva. Em vez de eliminar as variáveis uma por vez, adicionamos as variáveis uma por vez até não encontrarmos nenhuma variável que melhore o modelo (medida pelo <span class="math inline">\(R^2\)</span> ajustado).</p>
+
+<div class="example">
+<span id="exm:forwardEliminationExampleWMarioKartData" class="example"><strong>Exemplo 1.5  </strong></span>Construa um modelo para o conjunto de dadosusando a estratégia de seleção progressiva.
+</div>
+
+<p>Começamos com o modelo que não inclui variáveis. Em seguida, ajustamos cada um dos modelos possíveis com apenas uma variável. Ou seja, nós ajustamos no modelo incluindo apenas <code>condição</code>, então o modelo incluindo apenas <code>foto</code>, então um modelo com apenas <code>duração</code>, e um modelo com apenas <code>rodas</code>. Cada um dos quatro modelos fornece um valor ajustado de <span class="math inline">\(R^2\)</span>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">R_v3 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="fl">0.3459</span>, <span class="fl">0.0332</span>, <span class="fl">0.1338</span>, <span class="fl">0.6390</span>), <span class="dt">ncol =</span> <span class="dv">4</span>, <span class="dt">nrow =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="kw">rownames</span>(R_v3) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;R² aj&#39;</span>)</a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="kw">colnames</span>(R_v3) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;condição&#39;</span>, <span class="st">&#39;foto&#39;</span>, <span class="st">&#39;duração&#39;</span>, <span class="st">&#39;rodas&#39;</span>)</a>
+<a class="sourceLine" id="cb10-4" title="4"></a>
+<a class="sourceLine" id="cb10-5" title="5">knitr<span class="op">::</span><span class="kw">kable</span>(R_v3)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">condição</th>
+<th align="right">foto</th>
+<th align="right">duração</th>
+<th align="right">rodas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>R² aj</td>
+<td align="right">0.3459</td>
+<td align="right">0.0332</td>
+<td align="right">0.1338</td>
+<td align="right">0.639</td>
+</tr>
+</tbody>
+</table>
+<p>Nesta primeira etapa, comparamos o <span class="math inline">\(R^2\)</span> ajustado com um modelo de linha de base que não possui preditores. O modelo sem preditores sempre tem <span class="math inline">\(R_{aj}^2 = 0\)</span>. O modelo com um preditor que tem o maior <span class="math inline">\(R^2\)</span> ajustado é o modelo com o preditor <code>rodas</code>, e porque esse <span class="math inline">\(R^2\)</span> ajustado é maior que o <span class="math inline">\(R^2\)</span> ajustado do modelo sem preditores (<span class="math inline">\(R_{aj}^2 = 0\)</span>), vamos adicionar essa variável ao nosso modelo.</p>
+<p>Repetimos o processo novamente, desta vez considerando modelos de 2 preditores onde um dos preditores é <code>rodas</code> e com uma nova linha de base <span class="math inline">\(R^2_{aj} = 0.6390\)</span>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">R_v4 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="fl">0.7124</span>, <span class="fl">0.6587</span>, <span class="fl">0.6528</span>), <span class="dt">ncol =</span> <span class="dv">3</span>, <span class="dt">nrow =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="kw">rownames</span>(R_v4) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;R² aj&#39;</span>)</a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="kw">colnames</span>(R_v4) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;condição&#39;</span>, <span class="st">&#39;foto&#39;</span>, <span class="st">&#39;duração&#39;</span>)</a>
+<a class="sourceLine" id="cb11-4" title="4"></a>
+<a class="sourceLine" id="cb11-5" title="5">knitr<span class="op">::</span><span class="kw">kable</span>(R_v4)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">condição</th>
+<th align="right">foto</th>
+<th align="right">duração</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>R² aj</td>
+<td align="right">0.7124</td>
+<td align="right">0.6587</td>
+<td align="right">0.6528</td>
+</tr>
+</tbody>
+</table>
+<p>O melhor preditor nesta fase, <code>condição</code>, tem um maior <span class="math inline">\(R^2\)</span> ajustado (0.7124) que a linha de base (0.6390), então também o adicionamos no modelo.</p>
+<p>Como adicionamos novamente uma variável ao modelo, continuamos e verificamos se seria vantajoso adicionar uma terceira variável:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">R_v5 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="fl">0.7128</span>, <span class="fl">0.7107</span>), <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">nrow =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="kw">rownames</span>(R_v5) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;R² aj&#39;</span>)</a>
+<a class="sourceLine" id="cb12-3" title="3"><span class="kw">colnames</span>(R_v5) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;foto&#39;</span>, <span class="st">&#39;duração&#39;</span>)</a>
+<a class="sourceLine" id="cb12-4" title="4"></a>
+<a class="sourceLine" id="cb12-5" title="5">knitr<span class="op">::</span><span class="kw">kable</span>(R_v5)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">foto</th>
+<th align="right">duração</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>R² aj</td>
+<td align="right">0.7128</td>
+<td align="right">0.7107</td>
+</tr>
+</tbody>
+</table>
+<p>O modelo adicionando <code>foto</code> tem maior <span class="math inline">\(R^2\)</span> ajustado (0.7124 para 0.7128), então nós o adicionamos no modelo.</p>
+<p>Porque nós adicionamos novamente um preditor, nós verificamos se adicionando a última variável, <code>duração</code>, irá melhorar o <span class="math inline">\(R^2\)</span> ajustado. Nós comparamos o <span class="math inline">\(R^2\)</span> ajustado do modelo com duração e os outros três preditores (0,7108) para o modelo que considera apenas <code>rodas</code>, <code>condição</code>, e <code>foto</code> (0,7128). Adicionar <code>duração</code> não melhora o <span class="math inline">\(R^2\)</span> ajustado, por isso não o adicionamos ao modelo, e chegamos ao mesmo modelo que identificamos a partir da eliminação regressiva.</p>
+<div class="alert alert-info">
+<p><strong>Estratégias de seleção de modelos</strong>: A eliminação regressiva começa com o maior modelo e elimina as variáveis uma a uma até que estejamos satisfeitos de que todas as variáveis restantes são importantes para o modelo. A seleção progressiva começa sem nenhuma variável incluída no modelo, depois adiciona variáveis de acordo com sua importância até que nenhuma outra variável importante seja encontrada.</p>
+</div>
+<p>Não há garantia de que a eliminação regressiva e a seleção progressiva chegarão ao mesmo modelo final. Se ambas as técnicas são testadas e chegam a modelos diferentes, escolhemos o modelo com o maior <span class="math inline">\(R_{aj}^2\)</span>; Outras opções de escolha existem, mas estão além do escopo deste livro.</p>
+</div>
+<div id="a-abordagem-do-p-valor-uma-alternativa-para-o-r2-ajustado" class="section level3">
+<h3><span class="header-section-number">1.2.3</span> A abordagem do p-valor, uma alternativa para o <span class="math inline">\(R^2\)</span> ajustado</h3>
+<p>O p-valor pode ser usado como uma alternativa para o ajuste de <span class="math inline">\(R^2\)</span> para a seleção do modelo.</p>
+<p>Na eliminação regressiva, identificaríamos o preditor correspondente ao maior p-valor. Se o p-valor estiver acima do nível de significância, geralmente <span class="math inline">\(\alpha = 0,05\)</span>, então abandonaríamos essa variável, reformaríamos o modelo e repetiríamos o processo. Se o maior p-valor for menor que <span class="math inline">\(\alpha = 0,05\)</span>, então não eliminaríamos nenhum preditor e o modelo atual seria nosso modelo de melhor ajuste.</p>
+<p>Na seleção direta com p-valores, invertemos o processo. Começamos com um modelo que não possui preditores, então ajustamos um modelo para cada possível preditor, identificando o modelo em que o p-valor do preditor correspondente é o menor. Se esse p-valor for menor que <span class="math inline">\(\alpha = 0,05\)</span>, nós o adicionamos ao modelo e repetimos o processo, considerando se devemos adicionar mais variáveis uma por vez. Quando nenhum dos preditores restantes puder ser adicionado ao modelo e tiver um p-valor menor que 0,05, então paramos de adicionar variáveis e o modelo atual seria nosso modelo de melhor ajuste.</p>
+<hr />
+
+<div class="exercise">
+<span id="exr:unnamed-chunk-14" class="exercise"><strong>Prática Orientada 1.9  </strong></span>Examine a Tabela <a href="#tab:marioKartMultipleRegressionModelAllButDuration">1.6</a>, que considera o modelo incluindo os preditores <code>condição</code>, <code>foto</code> e <code>rodas</code>. Se estivéssemos usando a abordagem de p-valor com eliminação regressiva e estivéssemos considerando esse modelo, qual dessas três variáveis estaria pronta para eliminação? Nós abandonaríamos essa variável ou a manteríamos no modelo?<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a>
+</div>
+
+<hr />
+<p>Embora as abordagens do <span class="math inline">\(R^2\)</span> ajustado e do p-valor sejam semelhantes, elas às vezes levam a modelos diferentes, com a abordagem do <span class="math inline">\(R^2\)</span> ajustado tendendo a incluir mais preditores no modelo final. Por exemplo, se tivéssemos usado a abordagem do p-valor com os dados do leilão, não teríamos incluído o preditor <code>foto</code> no modelo final.</p>
+<div class="alert alert-info">
+<p><strong>Quando usar o <span class="math inline">\(R^2\)</span> ajustado e quando usar a abordagem do p-valor</strong>: Quando o único objetivo é melhorar a precisão da previsão, use <span class="math inline">\(R^2\)</span> ajustado. Esse é comumente o caso em aplicativos de aprendizado de máquina.</p>
+<p>Quando nos preocupamos em entender quais variáveis são estatisticamente significantes preditores da resposta, ou se existe interesse em produzir um modelo mais simples ao custo potencial de uma pequena precisão de predição, então a abordagem do p-valor é preferida.</p>
+</div>
+<p>Independentemente de você usar a abordagem do <span class="math inline">\(R^2\)</span> ajustado ou do p-valor, ou se você usar a eliminação regressiva ou seleção progressiva, nosso trabalho não está feito após a seleção de variáveis. Devemos ainda verificar se as condições do modelo são razoáveis.</p>
+</div>
+</div>
+<div id="multipleRegressionModelAssumptions" class="section level2">
+<h2><span class="header-section-number">1.3</span> Verificando os pressupostos do modelo usando gráficos</h2>
+<p>Métodos de regressão múltipla usando o modelo</p>
+<p><span class="math display">\[\begin{align*}
+\hat{y} &amp;= \beta_0 + \beta_1x_1 + \beta_2x_2 + \cdots + \beta_kx_k
+\end{align*}\]</span></p>
+<p>geralmente dependem dos seguintes quatro pressupostos:</p>
+<ul>
+<li><p>os resíduos do modelo são quase normais,</p></li>
+<li><p>a variabilidade dos resíduos é quase constante,</p></li>
+<li><p>os resíduos são independentes, e</p></li>
+<li><p>cada variável é linearmente relacionada ao resultado.</p></li>
+</ul>
+<p>Os <strong>Gráficos de diagnóstico</strong> podem ser usados para verificar cada uma dessas suposições. Vamos considerar o modelo dos dados do leilão Mario Kart, e verificar se há alguma preocupação notável:</p>
+<p><span class="math display">\[\begin{align*}
+\widehat{preço} &amp;= \ 36,05 + 5,18 \times \text{cond\_nova} + 1,12 \times \text{foto\_stock} + 7,30 \times \text{rodas}
+\end{align*}\]</span></p>
+<ul>
+<li><strong>Gráfico de probabilidade normal.</strong> Um gráfico de probabilidade normal dos resíduos é mostrado na Figura <a href="#fig:mkDiagnosticNormalQuantilePlot">1.2</a>. Enquanto o enredo exibe algumas pequenas irregularidades, não há outliers que possam ser motivo de preocupação. Em um gráfico de probabilidade normal para resíduos, tendemos a estar mais preocupados com resíduos que parecem ser outliers, uma vez que indicam caudas longas na distribuição de resíduos.</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">library</span>(openintro)</a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="kw">data</span>(marioKart)</a>
+<a class="sourceLine" id="cb13-3" title="3">toss &lt;-<span class="st"> </span><span class="kw">which</span>(marioKart<span class="op">$</span>totalPr <span class="op">&gt;</span><span class="st"> </span><span class="dv">80</span>)</a>
+<a class="sourceLine" id="cb13-4" title="4">keep &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;totalPr&quot;</span>,</a>
+<a class="sourceLine" id="cb13-5" title="5">          <span class="st">&quot;cond&quot;</span>,</a>
+<a class="sourceLine" id="cb13-6" title="6">          <span class="st">&quot;stockPhoto&quot;</span>,</a>
+<a class="sourceLine" id="cb13-7" title="7">          <span class="st">&quot;duration&quot;</span>,</a>
+<a class="sourceLine" id="cb13-8" title="8">          <span class="st">&quot;wheels&quot;</span>,</a>
+<a class="sourceLine" id="cb13-9" title="9">          <span class="st">&quot;shipSp&quot;</span>)</a>
+<a class="sourceLine" id="cb13-10" title="10">d &lt;-<span class="st"> </span>marioKart[<span class="op">-</span>toss, keep]</a>
+<a class="sourceLine" id="cb13-11" title="11">d<span class="op">$</span>stockPhoto &lt;-<span class="st"> </span>(d<span class="op">$</span>stockPhoto <span class="op">==</span><span class="st"> &quot;yes&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb13-12" title="12">d<span class="op">$</span>cond &lt;-<span class="st"> </span>(d<span class="op">$</span>cond <span class="op">==</span><span class="st"> &quot;new&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb13-13" title="13">thisOne &lt;-<span class="st"> </span><span class="kw">names</span>(d) <span class="op">==</span><span class="st"> &quot;cond&quot;</span></a>
+<a class="sourceLine" id="cb13-14" title="14"><span class="kw">names</span>(d)[thisOne] &lt;-<span class="st"> &quot;condNew&quot;</span></a>
+<a class="sourceLine" id="cb13-15" title="15">d<span class="op">$</span>shipSp &lt;-<span class="st"> </span><span class="kw">as.character</span>(d<span class="op">$</span>shipSp)</a>
+<a class="sourceLine" id="cb13-16" title="16">these &lt;-<span class="st"> </span>d<span class="op">$</span>shipSp <span class="op">%in%</span></a>
+<a class="sourceLine" id="cb13-17" title="17"><span class="st">         </span><span class="kw">c</span>(<span class="st">&quot;firstClass&quot;</span>, <span class="st">&quot;priority&quot;</span>, <span class="st">&quot;parcel&quot;</span>, <span class="st">&quot;media&quot;</span>)</a>
+<a class="sourceLine" id="cb13-18" title="18">d<span class="op">$</span>shipSp[these] &lt;-<span class="st"> &quot;usps&quot;</span></a>
+<a class="sourceLine" id="cb13-19" title="19">d<span class="op">$</span>shipSp[<span class="kw">grep</span>(<span class="st">&quot;ups&quot;</span>, d<span class="op">$</span>shipSp)] &lt;-<span class="st"> &quot;ups&quot;</span></a>
+<a class="sourceLine" id="cb13-20" title="20">these &lt;-<span class="st"> </span>d<span class="op">$</span>shipSp <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;other&quot;</span>, <span class="st">&quot;standard&quot;</span>)</a>
+<a class="sourceLine" id="cb13-21" title="21">d<span class="op">$</span>shipSp[these] &lt;-<span class="st"> &quot;unknown&quot;</span></a>
+<a class="sourceLine" id="cb13-22" title="22">d<span class="op">$</span>shipSp &lt;-<span class="st"> </span><span class="kw">as.factor</span>(d<span class="op">$</span>shipSp)</a>
+<a class="sourceLine" id="cb13-23" title="23">d &lt;-<span class="st"> </span>d[,<span class="op">-</span><span class="kw">which</span>(<span class="kw">colnames</span>(d) <span class="op">==</span><span class="st"> &quot;shipSp&quot;</span>)]</a>
+<a class="sourceLine" id="cb13-24" title="24"></a>
+<a class="sourceLine" id="cb13-25" title="25">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(totalPr <span class="op">~</span><span class="st"> </span>condNew <span class="op">+</span><span class="st"> </span>stockPhoto <span class="op">+</span><span class="st"> </span>wheels, <span class="dt">data =</span> d)</a>
+<a class="sourceLine" id="cb13-26" title="26"></a>
+<a class="sourceLine" id="cb13-27" title="27">e &lt;-<span class="st"> </span>fit<span class="op">$</span>res</a>
+<a class="sourceLine" id="cb13-28" title="28">f &lt;-<span class="st"> </span>fit<span class="op">$</span>fit</a>
+<a class="sourceLine" id="cb13-29" title="29"></a>
+<a class="sourceLine" id="cb13-30" title="30"><span class="co"># mkDiagnosticNormalQuantilePlot.pdf</span></a>
+<a class="sourceLine" id="cb13-31" title="31"><span class="kw">ggplot</span>(<span class="dt">data =</span> <span class="kw">data.frame</span>(e), <span class="kw">aes</span>(<span class="dt">sample =</span> e)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb13-32" title="32"><span class="st">  </span><span class="kw">stat_qq</span>(<span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb13-33" title="33"><span class="st">  </span><span class="kw">stat_qq_line</span>(<span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>, <span class="dt">linetype =</span> <span class="st">&#39;dashed&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb13-34" title="34"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>(), <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb13-35" title="35"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Quantis Teóricos&quot;,y = &quot;</span>Resíduos<span class="st">&quot;)  +  </span></a>
+<a class="sourceLine" id="cb13-36" title="36"><span class="st">  theme(panel.border = element_rect(colour = &quot;</span>black<span class="st">&quot;, fill=NA, size=1))</span></a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:mkDiagnosticNormalQuantilePlot"></span>
+<img src="ch8_reg_mult_log_files/figure-html/mkDiagnosticNormalQuantilePlot-1.png" alt="Um gráfico de probabilidade normal dos resíduos é útil na identificação de observações que podem ser outliers." width="100%" height="30%" />
+<p class="caption">
+Figura 1.2: Um gráfico de probabilidade normal dos resíduos é útil na identificação de observações que podem ser outliers.
+</p>
+</div>
+<ul>
+<li><strong>Valores absolutos dos resíduos em relação aos valores ajustados.</strong> Um gráfico do valor absoluto dos resíduos em relação aos seus valores ajustados correspondentes (<span class="math inline">\(\hat{y}_i\)</span>) é mostrado na Figura <a href="#fig:mkDiagnosticEvsAbsF">1.3</a>. Este gráfico é útil para verificar a condição de que a variação dos resíduos é aproximadamente constante. Não vemos desvios óbvios da variação constante neste exemplo.</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="co"># mkDiagnosticEvsAbsF.pdf</span></a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Valores Ajustados&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Valores Absolutos dos Resíduos&quot;</span>)  <span class="op">+</span><span class="st">  </span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">size =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> f, <span class="dt">y =</span> <span class="kw">abs</span>(e)), <span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:mkDiagnosticEvsAbsF"></span>
+<img src="ch8_reg_mult_log_files/figure-html/mkDiagnosticEvsAbsF-1.png" alt="Comparando o valor absoluto dos resíduos com os valores ajustados é útil na identificação de desvios da suposição de variância constante." width="100%" height="30%" />
+<p class="caption">
+Figura 1.3: Comparando o valor absoluto dos resíduos com os valores ajustados é útil na identificação de desvios da suposição de variância constante.
+</p>
+</div>
+<ul>
+<li><strong>Resíduos em ordem de coleta de dados.</strong> Um gráfico dos resíduos na ordem em que seus leilões correspondentes foram observados é mostrado na Figura <a href="#fig:mkDiagnosticInOrder">1.4</a>. Tal enredo é útil para identificar qualquer ligação entre casos que estão próximos uns dos outros. Poderíamos procurar preços em queda ao longo do tempo ou se houvesse uma hora do dia em que os leilões tendiam a obter um preço mais alto. Aqui não vemos nenhuma estrutura que indique um problema.~[Uma verificação especialmente rigorosa usaria os métodos de <strong>séries temporais</strong>. Por exemplo, podemos verificar se os resíduos consecutivos estão correlacionados. Fazer isso com esses resíduos não gera correlações estatisticamente significativas.]</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co"># mkDiagnosticInOrder.pdf</span></a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Ordem de Coleta&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Resíduos&quot;</span>)  <span class="op">+</span><span class="st">  </span></a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">size =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb15-5" title="5"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(e), <span class="dt">y =</span> e), <span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:mkDiagnosticInOrder"></span>
+<img src="ch8_reg_mult_log_files/figure-html/mkDiagnosticInOrder-1.png" alt="Plotar os resíduos na ordem em que as observações correspondentes foram coletadas ajuda a identificar as conexões entre as observações sucessivas. Se parece que observações consecutivas tendem a estar próximas umas das outras, isso indica que a suposição de independência das observações falharia." width="100%" height="30%" />
+<p class="caption">
+Figura 1.4: Plotar os resíduos na ordem em que as observações correspondentes foram coletadas ajuda a identificar as conexões entre as observações sucessivas. Se parece que observações consecutivas tendem a estar próximas umas das outras, isso indica que a suposição de independência das observações falharia.
+</p>
+</div>
+<ul>
+<li><strong>Residuos contra cada variável preditora.</strong> Consideramos um gráfico dos resíduos em relação à variável <code>condição</code>, os resíduos contra a variável <code>foto</code>e resíduos contra a variável <code>roda</code>. Estes gráficos são mostradas na Figura <a href="#fig:mkDiagnosticEvsVariables">1.5</a>. Para a variável de condição de dois níveis, garantimos que não veremos nenhuma tendência restante e, em vez disso, estamos verificando se a variabilidade não flutua entre os grupos, o que não acontece. No entanto, olhando para a variável estoque de fotos, descobrimos que há alguma diferença na variabilidade dos resíduos nos dois grupos. Adicionalmente, quando consideramos os resíduos contra a variável <code>rodas</code>, nós vemos alguma estrutura possível. Parece haver curvatura nos resíduos, indicando que a relação provavelmente não é linear.</li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co"># mkDiagnosticEvsVariables.pdf</span></a>
+<a class="sourceLine" id="cb16-2" title="2">g1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="kw">as.factor</span>(d<span class="op">$</span>condNew), e)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-3" title="3"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">size =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Condição&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Resíduos&quot;</span>)  <span class="op">+</span><span class="st">  </span></a>
+<a class="sourceLine" id="cb16-5" title="5"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">as.factor</span>(<span class="dv">0</span>), <span class="dt">y =</span> e[d<span class="op">$</span>condNew <span class="op">==</span><span class="st"> </span><span class="dv">0</span>]), <span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-7" title="7"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">as.factor</span>(<span class="dv">1</span>), <span class="dt">y =</span> e[d<span class="op">$</span>condNew <span class="op">==</span><span class="st"> </span><span class="dv">1</span>]), <span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-8" title="8"><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="dv">1</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&#39;Usado&#39;</span>, <span class="st">&#39;Novo&#39;</span>))  </a>
+<a class="sourceLine" id="cb16-9" title="9"></a>
+<a class="sourceLine" id="cb16-10" title="10"></a>
+<a class="sourceLine" id="cb16-11" title="11">g2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="kw">as.factor</span>(d<span class="op">$</span>stockPhoto), e)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-12" title="12"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">size =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-13" title="13"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Tipo de Foto&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Resíduos&quot;</span>)  <span class="op">+</span><span class="st">  </span></a>
+<a class="sourceLine" id="cb16-14" title="14"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-15" title="15"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">as.factor</span>(<span class="dv">0</span>), <span class="dt">y =</span> e[d<span class="op">$</span>stockPhoto <span class="op">==</span><span class="st"> </span><span class="dv">0</span>]), <span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-16" title="16"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">as.factor</span>(<span class="dv">1</span>), <span class="dt">y =</span> e[d<span class="op">$</span>stockPhoto <span class="op">==</span><span class="st"> </span><span class="dv">1</span>]), <span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-17" title="17"><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="dv">1</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&#39;Única&#39;</span>, <span class="st">&#39;Estoque&#39;</span>))  </a>
+<a class="sourceLine" id="cb16-18" title="18"></a>
+<a class="sourceLine" id="cb16-19" title="19">g3 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(d<span class="op">$</span>wheels, e)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">size =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-21" title="21"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Número de Rodas&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Resíduos&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-22" title="22"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>)</a>
+<a class="sourceLine" id="cb16-23" title="23"></a>
+<a class="sourceLine" id="cb16-24" title="24">gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(g1, g2, g3, <span class="dt">ncol =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:mkDiagnosticEvsVariables"></span>
+<img src="ch8_reg_mult_log_files/figure-html/mkDiagnosticEvsVariables-1.png" alt="Para as variáveis condição e foto, verificamos as diferenças no formato de distribuição ou na variabilidade dos resíduos. No caso da variável foto, vemos um pouco menos de variabilidade no grupo foto única do que no outro grupo. Para preditores numéricos, também verificamos tendências ou outras estruturas. Vemos uma ligeira reverência nos resíduos contra a variável rodas na parte de baixo." width="100%" height="100%" />
+<p class="caption">
+Figura 1.5: Para as variáveis condição e foto, verificamos as diferenças no formato de distribuição ou na variabilidade dos resíduos. No caso da variável foto, vemos um pouco menos de variabilidade no grupo foto única do que no outro grupo. Para preditores numéricos, também verificamos tendências ou outras estruturas. Vemos uma ligeira reverência nos resíduos contra a variável rodas na parte de baixo.
+</p>
+</div>
+<p>É necessário resumir os diagnósticos para qualquer ajuste de modelo. Se os diagnósticos suportarem as suposições do modelo, isso melhoraria a credibilidade nos resultados. Se a avaliação diagnóstica mostrar a estrutura subjacente remanescente nos resíduos, devemos tentar ajustar o modelo para considerar essa estrutura. Se não formos capazes de fazê-lo, poderemos ainda relatar o modelo, mas também observar suas deficiências. No caso dos dados do leilão, relatamos que parece haver uma variação não constante na variável <code>fotos</code> e que pode haver uma relação não linear entre o preço total e o número de rodas incluídas em um leilão. Esta informação seria importante para os compradores e vendedores que podem rever a análise, e omitir esta informação pode ser um revés para as pessoas que o modelo pode ajudar.</p>
+<div class="alert alert-info">
+<p><strong>“Todos os modelos estão errados, mas alguns são úteis”" - George E.P. Box</strong>: A verdade é que nenhum modelo é perfeito. No entanto, até modelos imperfeitos podem ser úteis. Relatar um modelo falho pode ser razoável desde que seja claro e relate as deficiências do modelo.</p>
+</div>
+<div class="alert alert-info">
+<p><strong> Não relate os resultados quando as suposições forem totalmente violadas</strong>: Embora haja uma pequena margem de manobra nas suposições do modelo, não vá longe demais. Se as suposições do modelo forem claramente violadas, considere um novo modelo, mesmo que isso signifique aprender mais métodos estatísticos ou contratar alguém que possa ajudar.</p>
+</div>
+<div class="alert alert-info">
+<p><strong>Intervalos de confiança em regressão múltipla</strong>: Intervalos de confiança para coeficientes em regressão múltipla podem ser calculados usando a mesma fórmula como no modelo preditor único:</p>
+<p><span class="math display">\[\begin{align*}
+b_i \ \pm\ t_{df}^{\star}EP_{b_{i}}
+\end{align*}\]</span></p>
+<p>onde <span class="math inline">\(t_{df}^{\star}\)</span> é o valor <span class="math inline">\(t\)</span> apropriado correspondente ao nível de confiança e aos graus de liberdade do modelo, <span class="math inline">\(df=n-k-1\)</span>.</p>
+</div>
+</div>
+<div id="logisticRegression" class="section level2">
+<h2><span class="header-section-number">1.4</span> Introdução à regressão logística</h2>
+<p>Nesta seção, apresentamos a <strong>regressão logística</strong> como uma ferramenta para construir modelos quando existe uma variável de resposta categórica com dois níveis. A regressão logística é um tipo de <strong>modelo linear generalizado</strong> (MLG) para variáveis de resposta onde a regressão múltipla regular não funciona muito bem. Em particular, a variável resposta nessas configurações geralmente assume um formato em que os residuos parecem completamente diferentes da distribuição normal.</p>
+<p>Os MLG podem ser considerados como uma abordagem de modelagem de dois estágios. Primeiro modelamos a variável de resposta usando uma distribuição de probabilidade, como a distribuição binomial ou de Poisson. Segundo, modelamos o parâmetro da distribuição usando uma coleção de preditores e uma forma especial de regressão múltipla.</p>
+<p>Na Seção <a href="#logisticRegression">1.4</a> vamos revisitar o conjunto de dados <code>email</code>. Esses e-mails foram coletados de uma única conta de e-mail e trabalharemos no desenvolvimento de um filtro de spam básico usando esses dados. A variável resposta, <code>spam</code>, foi codificado para ter valor 0 quando uma mensagem não é spam e 1 quando é spam. Nossa tarefa será criar um modelo apropriado que classifique mensagens como spam ou não spam, usando características de email codificadas como variáveis preditoras. Embora esse modelo não seja o mesmo daqueles usados em filtros de spam de grande escala, ele compartilha muitos dos mesmos recursos.</p>
+<div id="dados-e-mail" class="section level3">
+<h3><span class="header-section-number">1.4.1</span> Dados e-mail</h3>
+<p>O conjunto de dados <code>email</code> foi apresentado pela primeira vez no Capítulo de introdução, com um número relativamente pequeno de variáveis. Na verdade, existem muitas outras variáveis disponíveis que podem ser úteis para classificar o spam. As descrições dessas variáveis são apresentadas na Tabela <a href="#tab:emailVariables">1.7</a>. A variável <em>spam</em> será o resultado, e as outras 10 variáveis serão os preditores do modelo. Embora tenhamos limitado que os preditores usados nesta seção sejam variáveis categóricas (em que muitos são representados como variáveis indicadoras), preditores numéricos também podem ser usados na regressão logística. Veja a nota de rodapé para uma discussão adicional sobre este tópico.<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">data</span>(<span class="st">&quot;email&quot;</span>)</a>
+<a class="sourceLine" id="cb17-2" title="2"></a>
+<a class="sourceLine" id="cb17-3" title="3">aux &lt;-<span class="st"> </span>email[,<span class="kw">c</span>(<span class="st">&#39;spam&#39;</span>, <span class="st">&#39;to_multiple&#39;</span>, <span class="st">&#39;cc&#39;</span>, <span class="st">&#39;attach&#39;</span>, <span class="st">&#39;dollar&#39;</span>, <span class="st">&#39;winner&#39;</span>, </a>
+<a class="sourceLine" id="cb17-4" title="4">                <span class="st">&#39;inherit&#39;</span>, <span class="st">&#39;password&#39;</span>, <span class="st">&#39;format&#39;</span>, <span class="st">&#39;re_subj&#39;</span>, <span class="st">&#39;exclaim_subj&#39;</span>)]</a>
+<a class="sourceLine" id="cb17-5" title="5"></a>
+<a class="sourceLine" id="cb17-6" title="6"><span class="kw">names</span>(aux) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;spam&#39;</span>, <span class="st">&#39;a_multiplos&#39;</span>, <span class="st">&#39;cc&#39;</span>, <span class="st">&#39;anexo&#39;</span>, <span class="st">&#39;dolar&#39;</span>, <span class="st">&#39;ganhador&#39;</span>,</a>
+<a class="sourceLine" id="cb17-7" title="7">                <span class="st">&#39;herdar&#39;</span>, <span class="st">&#39;senha&#39;</span>, <span class="st">&#39;formatacao&#39;</span>, <span class="st">&#39;re_assun&#39;</span>, <span class="st">&#39;exclamacao_assun&#39;</span>)</a>
+<a class="sourceLine" id="cb17-8" title="8"></a>
+<a class="sourceLine" id="cb17-9" title="9">des_email &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Especifica se a mensagem era spam&#39;</span>, </a>
+<a class="sourceLine" id="cb17-10" title="10">               <span class="st">&#39;uma variável indicadora de se mais de uma pessoa estava no campo A do email&#39;</span>, </a>
+<a class="sourceLine" id="cb17-11" title="11">               <span class="st">&#39;um indicador se alguém estava no campo cc do email&#39;</span>, </a>
+<a class="sourceLine" id="cb17-12" title="12">               <span class="st">&#39;um indicador se tinha um anexo, como um documento ou imagem&#39;</span>, </a>
+<a class="sourceLine" id="cb17-13" title="13">               <span class="st">&#39;um indicador se a palavra dólar ou simbolo $ apareceu no email&#39;</span>,</a>
+<a class="sourceLine" id="cb17-14" title="14">               <span class="st">&#39;um indicador se a palavra ganhador apareceu no email&#39;</span>, </a>
+<a class="sourceLine" id="cb17-15" title="15">               <span class="st">&#39;um indicador se a palavra herdar (ou uma variação, como heranca), apareceu no email&#39;</span>, </a>
+<a class="sourceLine" id="cb17-16" title="16">               <span class="st">&#39;um indicador se a palavra senha estava presente no email&#39;</span>, </a>
+<a class="sourceLine" id="cb17-17" title="17">               <span class="st">&#39;indica se o email tinha formatação especial, como negritos, tabelas ou links&#39;</span>, </a>
+<a class="sourceLine" id="cb17-18" title="18">               <span class="st">&#39;indica se re: estava incluida no começo do assunto do email&#39;</span>,</a>
+<a class="sourceLine" id="cb17-19" title="19">               <span class="st">&#39;indica se tinha algum ponto de exclamação no assunto do email&#39;</span>)</a>
+<a class="sourceLine" id="cb17-20" title="20"></a>
+<a class="sourceLine" id="cb17-21" title="21">table7 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">cbind</span>(<span class="kw">names</span>(aux), des_email))</a>
+<a class="sourceLine" id="cb17-22" title="22"><span class="kw">colnames</span>(table7) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Variável&#39;</span>, <span class="st">&#39;Descrição&#39;</span>)</a>
+<a class="sourceLine" id="cb17-23" title="23"></a>
+<a class="sourceLine" id="cb17-24" title="24">knitr<span class="op">::</span><span class="kw">kable</span>(table7, <span class="dt">caption =</span> <span class="st">&#39;Descrições de 11 variáveis no conjunto de dados email. Observe que todas as variáveis são variáveis indicadoras, que tomam o valor 1 se a característica especificada estiver presente e 0 caso contrário.&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:emailVariables">Tabela 1.7: </span>Descrições de 11 variáveis no conjunto de dados email. Observe que todas as variáveis são variáveis indicadoras, que tomam o valor 1 se a característica especificada estiver presente e 0 caso contrário.</caption>
+<thead>
+<tr class="header">
+<th align="left">Variável</th>
+<th align="left">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">spam</td>
+<td align="left">Especifica se a mensagem era spam</td>
+</tr>
+<tr class="even">
+<td align="left">a_multiplos</td>
+<td align="left">uma variável indicadora de se mais de uma pessoa estava no campo A do email</td>
+</tr>
+<tr class="odd">
+<td align="left">cc</td>
+<td align="left">um indicador se alguém estava no campo cc do email</td>
+</tr>
+<tr class="even">
+<td align="left">anexo</td>
+<td align="left">um indicador se tinha um anexo, como um documento ou imagem</td>
+</tr>
+<tr class="odd">
+<td align="left">dolar</td>
+<td align="left">um indicador se a palavra dólar ou simbolo $ apareceu no email</td>
+</tr>
+<tr class="even">
+<td align="left">ganhador</td>
+<td align="left">um indicador se a palavra ganhador apareceu no email</td>
+</tr>
+<tr class="odd">
+<td align="left">herdar</td>
+<td align="left">um indicador se a palavra herdar (ou uma variação, como heranca), apareceu no email</td>
+</tr>
+<tr class="even">
+<td align="left">senha</td>
+<td align="left">um indicador se a palavra senha estava presente no email</td>
+</tr>
+<tr class="odd">
+<td align="left">formatacao</td>
+<td align="left">indica se o email tinha formatação especial, como negritos, tabelas ou links</td>
+</tr>
+<tr class="even">
+<td align="left">re_assun</td>
+<td align="left">indica se re: estava incluida no começo do assunto do email</td>
+</tr>
+<tr class="odd">
+<td align="left">exclamacao_assun</td>
+<td align="left">indica se tinha algum ponto de exclamação no assunto do email</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="modelingTheProbabilityOfAnEvent" class="section level3">
+<h3><span class="header-section-number">1.4.2</span> Modelando a probabilidade de um evento</h3>
+<div class="alert alert-info">
+<p><strong>Notação para um modelo de regressão logística</strong>: A variável de resultado para um MLG é denotada por <span class="math inline">\(Y_i\)</span>, onde o índice <span class="math inline">\(i\)</span> é usado para representar a observação <span class="math inline">\(i\)</span>. No aplicativo de e-mail, <span class="math inline">\(Y_i\)</span> será usado para representar se o e-mail <span class="math inline">\(i\)</span> é spam (<span class="math inline">\(Y_i=1\)</span>) ou não (<span class="math inline">\(Y_i=0\)</span>).</p>
+<p>As variáveis preditoras são representadas da seguinte forma: <span class="math inline">\(x_{1,i}\)</span> é o valor da variável 1 para observação <span class="math inline">\(i\)</span>, <span class="math inline">\(x_{2,i}\)</span> é o valor da variável 2 para observação <span class="math inline">\(i\)</span> e assim por diante.</p>
+</div>
+<p>A regressão logística é um modelo linear generalizado em que o resultado é uma variável categórica de dois níveis. O resultado, <span class="math inline">\(Y_i\)</span>, recebe o valor 1 (em nosso aplicativo, isso representa uma mensagem de spam) com probabilidade <span class="math inline">\(p_i\)</span> e o valor 0 com probabilidade <span class="math inline">\(1-p_i\)</span>. É a probabilidade <span class="math inline">\(p_i\)</span> que modelamos em relação às variáveis preditoras.</p>
+<p>O modelo de regressão logística relaciona a probabilidade de um e-mail ser spam (<span class="math inline">\(p_i\)</span>) aos preditores <span class="math inline">\(x_{1,i}, x_{2,i}, \dots, x_{k,i}\)</span> através de um quadro muito parecido com o de regressão múltipla:</p>
+<p><span class="math display" id="eq:linkTransformationEquation">\[\begin{align}
+transformação(p_{i}) = \beta_0 + \beta_1x_{1,i} + \beta_2 x_{2,i} + \cdots \beta_k x_{k,i}
+\tag{1.3}
+\end{align}\]</span></p>
+<p>Queremos escolher uma transformação na Equação <a href="#eq:linkTransformationEquation">(1.3)</a> que faz sentido prático e matemático. Por exemplo, queremos uma transformação que faça o leque de possibilidades do lado esquerdo da Equação @ref9EQ:linkTransformationEquation) igual ao intervalo de possibilidades para o lado direito; se não houvesse transformação para essa equação, o lado esquerdo só poderia ter valores entre 0 e 1, mas o lado direito poderia obter valores fora desse intervalo. Uma transformação comum para <span class="math inline">\(p_i\)</span> é o <strong>transformação logit</strong>, que pode ser escrito como</p>
+<p><span class="math display">\[\begin{align*}
+logit(p_i) = \log_{e}\left( \frac{p_i}{1-p_i} \right)
+\end{align*}\]</span></p>
+<p>A transformação logit é mostrada na Figura <a href="#fig:logitTransformationFigureHoriz">1.6</a>. Abaixo, nós reescrevemos a Equação <a href="#eq:linkTransformationEquation">(1.3)</a> usando a transformação logit de <span class="math inline">\(p_i\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+\log_{e}\left( \frac{p_i}{1-p_i} \right)
+    = \beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \cdots + \beta_k x_{k,i}
+\end{align*}\]</span></p>
+<p>No nosso exemplo de spam, existem 10 variáveis preditoras, então <span class="math inline">\(k=10\)</span>. Este modelo não é muito intuitivo, mas ainda tem alguma semelhança com a regressão múltipla, e podemos ajustar este modelo usando <em>software</em>. De fato, uma vez que examinamos os resultados do <em>software</em>, começaremos a sentir que estamos de volta à regressão múltipla, mesmo que a interpretação dos coeficientes seja mais complexa.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">p  &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.0001</span>, <span class="fl">0.9999</span>, <span class="fl">0.0002</span>)</a>
+<a class="sourceLine" id="cb18-2" title="2">lp &lt;-<span class="st"> </span><span class="kw">log</span>(p<span class="op">/</span>(<span class="dv">1</span><span class="op">-</span>p))</a>
+<a class="sourceLine" id="cb18-3" title="3"></a>
+<a class="sourceLine" id="cb18-4" title="4">pts  &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.01</span>, <span class="fl">0.99</span>, <span class="dt">length.out =</span> <span class="dv">25</span>)</a>
+<a class="sourceLine" id="cb18-5" title="5">R    &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">6</span>,<span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb18-6" title="6">adj  &lt;-<span class="st"> </span><span class="fl">0.07</span></a>
+<a class="sourceLine" id="cb18-7" title="7">adj1 &lt;-<span class="st"> </span><span class="fl">0.02</span></a>
+<a class="sourceLine" id="cb18-8" title="8"></a>
+<a class="sourceLine" id="cb18-9" title="9"><span class="co">#-------------------------------------------------------------------------------</span></a>
+<a class="sourceLine" id="cb18-10" title="10">this &lt;-<span class="st"> </span><span class="kw">which.min</span>(<span class="kw">abs</span>(p <span class="op">-</span><span class="st"> </span><span class="fl">0.2</span>))</a>
+<a class="sourceLine" id="cb18-11" title="11">LP &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">6</span>, <span class="dv">-5</span>, <span class="dv">-1</span>))</a>
+<a class="sourceLine" id="cb18-12" title="12">P &lt;-<span class="st"> </span><span class="kw">exp</span>(LP) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(LP))</a>
+<a class="sourceLine" id="cb18-13" title="13">POS &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb18-14" title="14">xOFF &lt;-<span class="st"> </span><span class="kw">c</span>()</a>
+<a class="sourceLine" id="cb18-15" title="15">Round &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb18-16" title="16"></a>
+<a class="sourceLine" id="cb18-17" title="17">t1 &lt;-<span class="st"> </span>t2 &lt;-<span class="st"> </span>labs &lt;-<span class="st"> </span><span class="kw">vector</span>()</a>
+<a class="sourceLine" id="cb18-18" title="18"></a>
+<a class="sourceLine" id="cb18-19" title="19"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(LP)) {</a>
+<a class="sourceLine" id="cb18-20" title="20">  t1[i]   &lt;-<span class="st"> </span><span class="kw">format</span>(<span class="kw">round</span>(<span class="kw">c</span>(LP, <span class="fl">0.9</span>), Round[i]))[i]</a>
+<a class="sourceLine" id="cb18-21" title="21">  t2[i]   &lt;-<span class="st"> </span><span class="kw">format</span>(<span class="kw">round</span>(P, Round[i]))[i]</a>
+<a class="sourceLine" id="cb18-22" title="22">  </a>
+<a class="sourceLine" id="cb18-23" title="23">  labs[i] &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;(&quot;</span>, t1[i], <span class="st">&quot;, &quot;</span>, t2[i], <span class="st">&quot;)&quot;</span>)</a>
+<a class="sourceLine" id="cb18-24" title="24">}</a>
+<a class="sourceLine" id="cb18-25" title="25"></a>
+<a class="sourceLine" id="cb18-26" title="26"><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-27" title="27"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(lp, p)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-28" title="28"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">logit</span>(p[i])), <span class="dt">y =</span> <span class="kw">expression</span>(p[i])) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-29" title="29"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">size =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-30" title="30"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dt">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-31" title="31"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(LP, P), <span class="dt">color =</span> <span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-32" title="32"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="kw">as.numeric</span>(t1), <span class="dt">y =</span> <span class="kw">as.numeric</span>(t2), <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">label =</span> <span class="kw">paste0</span>(labs))</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:logitTransformationFigureHoriz"></span>
+<img src="ch8_reg_mult_log_files/figure-html/logitTransformationFigureHoriz-1.png" alt="Valores de pi contra valores de logit(pi)" width="100%" height="30%" />
+<p class="caption">
+Figura 1.6: Valores de pi contra valores de logit(pi)
+</p>
+</div>
+
+<div class="example">
+<span id="exm:logisticExampleWithToMultiple" class="example"><strong>Exemplo 1.6  </strong></span>Aqui criamos um filtro de spam com um único preditor: <code>a_múltiplos</code>. Essa variável indica se mais de um endereço de e-mail foi listado no campo do e-mail. O seguinte modelo de regressão logística foi ajustado usando software estatístico:
+</div>
+
+<p><span class="math display">\[\begin{align*}
+\log\left( \frac{p_i}{1-p_i} \right) = -2.12 - 1.81\times\text{a\_múltiplos}
+\end{align*}\]</span></p>
+<p>Se um email for selecionado aleatoriamente e tiver apenas um endereço no campo, qual é a probabilidade de ser spam? E se mais de um endereço estiver listado no campo?</p>
+<p>Se houver apenas um e-mail no campo de destinatários, <code>a_multiplicar</code> toma o valor 0 e o lado direito da equação do modelo é igual a -2,12. Resolvendo para <span class="math inline">\(p_i\)</span>: <span class="math inline">\(\frac{e^{-2.12}}{1 + e^{-2.12}} = 0.11\)</span>. Assim como rotulamos um valor ajustado de <span class="math inline">\(y_i\)</span> com um “chapéu” em uma variável simples e em uma regressão múltipla, faremos o mesmo para essa probabilidade: <span class="math inline">\(\hat{p}_i = 0.11\)</span>.</p>
+<p>Se houver mais de um endereço listado no campo de destinatários, o lado direito da equação do modelo será <span class="math inline">\(-2.12 - 1.81\times1 = -3.93\)</span>, que corresponde a uma probabilidade <span class="math inline">\(\hat{p}_i = 0.02\)</span>.</p>
+<p>Observe que podemos examinar -2,12 e -3,93 na Figura <a href="#fig:logitTransformationFigureHoriz">1.6</a> para estimar a probabilidade antes de calcular formalmente o valor.</p>
+<p>Para converter de valores na escala de regressão (por exemplo, -2,12 e -3,93 no Exemplo <a href="#exm:logisticExampleWithToMultiple">1.6</a>), use a seguinte fórmula, que é o resultado da resolução de <span class="math inline">\(p_i\)</span> no modelo de regressão:</p>
+<p><span class="math display">\[\begin{align*}
+p_i
+    = \frac{e^{\beta_0 + \beta_1 x_{1,i}+\cdots+\beta_k x_{k,i}}}
+        {\ 1\ \ +\ \ e^{\beta_0 + \beta_1 x_{1,i}+\cdots+\beta_k x_{k,i}}\ }
+\end{align*}\]</span></p>
+<p>Tal como acontece com a maioria dos problemas de dados aplicados, substituímos as estimativas pontuais dos parâmetros (o <span class="math inline">\(\beta_i\)</span>) para que possamos fazer uso desta fórmula. No Exemplo <a href="#exm:logisticExampleWithToMultiple">1.6</a>, as probabilidades foram calculadas como</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\frac{\ e^{-2.12}\ }{\ 1\ +\ e^{-2.12}\ } = 0.11 &amp;&amp; \frac{\ e^{-2.12 - 1.81}\ }{\ 1\ +\ e^{-2.12 - 1.81}\ } = 0.02
+\end{align*}\]</span></p>
+<p>Embora as informações sobre se o e-mail é endereçado a várias pessoas seja um começo útil na classificação de e-mails como spam ou não, as probabilidades de 11% e 2% não são drasticamente diferentes, e nenhuma delas fornece evidências muito fortes sobre quais mensagens de e-mail específicas são spam. Para obter estimativas mais precisas, precisaremos incluir muito mais variáveis no modelo.</p>
+<p>Usamos software estatístico para ajustar o modelo de regressão logística com todos os dez preditores descritos na Tabela <a href="#tab:emailVariables">1.7</a>. Como a regressão múltipla, o resultado pode ser apresentado em uma tabela de resumo, que é mostrada na Tabela <a href="#tab:emailLogisticModelResults">1.8</a>. A estrutura desta tabela é quase idêntica à da regressão múltipla; a única diferença notável é que os p-valores são calculados usando a distribuição normal em vez da distribuição-<span class="math inline">\(t\)</span>.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">aux<span class="op">$</span>ganhador &lt;-<span class="st"> </span><span class="kw">ifelse</span>(aux<span class="op">$</span>ganhador <span class="op">==</span><span class="st"> &#39;yes&#39;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb19-2" title="2">md &lt;-<span class="st"> </span><span class="kw">glm</span>(spam <span class="op">~</span><span class="st"> </span>. , <span class="dt">data =</span> aux, <span class="dt">family =</span> binomial)</a>
+<a class="sourceLine" id="cb19-3" title="3"></a>
+<a class="sourceLine" id="cb19-4" title="4">table8 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">summary</span>(md)<span class="op">$</span>coefficients)</a>
+<a class="sourceLine" id="cb19-5" title="5"><span class="kw">colnames</span>(table8) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Estimativa&#39;</span>, <span class="st">&#39;Erro Padrão&#39;</span>, <span class="st">&#39;Valor Z&#39;</span>, <span class="st">&#39;Pr(&gt;|z|)&#39;</span>)</a>
+<a class="sourceLine" id="cb19-6" title="6"></a>
+<a class="sourceLine" id="cb19-7" title="7">knitr<span class="op">::</span><span class="kw">kable</span>(table8, <span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">caption =</span> <span class="st">&#39;Tabela de resumo para o modelo de regressão logística completa para o exemplo de filtro de spam.&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:emailLogisticModelResults">Tabela 1.8: </span>Tabela de resumo para o modelo de regressão logística completa para o exemplo de filtro de spam.</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Estimativa</th>
+<th align="right">Erro Padrão</th>
+<th align="right">Valor Z</th>
+<th align="right">Pr(&gt;|z|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(Intercept)</td>
+<td align="right">-0.800</td>
+<td align="right">0.089</td>
+<td align="right">-8.950</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td>a_multiplos</td>
+<td align="right">-2.841</td>
+<td align="right">0.312</td>
+<td align="right">-9.118</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td>cc</td>
+<td align="right">0.031</td>
+<td align="right">0.019</td>
+<td align="right">1.654</td>
+<td align="right">0.098</td>
+</tr>
+<tr class="even">
+<td>anexo</td>
+<td align="right">0.204</td>
+<td align="right">0.059</td>
+<td align="right">3.478</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="odd">
+<td>dolar</td>
+<td align="right">-0.073</td>
+<td align="right">0.023</td>
+<td align="right">-3.168</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="even">
+<td>ganhador</td>
+<td align="right">1.831</td>
+<td align="right">0.336</td>
+<td align="right">5.443</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td>herdar</td>
+<td align="right">0.330</td>
+<td align="right">0.152</td>
+<td align="right">2.168</td>
+<td align="right">0.030</td>
+</tr>
+<tr class="even">
+<td>senha</td>
+<td align="right">-0.760</td>
+<td align="right">0.296</td>
+<td align="right">-2.566</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="odd">
+<td>formatacao</td>
+<td align="right">-1.523</td>
+<td align="right">0.123</td>
+<td align="right">-12.411</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td>re_assun</td>
+<td align="right">-3.119</td>
+<td align="right">0.365</td>
+<td align="right">-8.539</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td>exclamacao_assun</td>
+<td align="right">0.244</td>
+<td align="right">0.225</td>
+<td align="right">1.084</td>
+<td align="right">0.278</td>
+</tr>
+</tbody>
+</table>
+<p>Assim como a regressão múltipla, poderíamos cortar algumas variáveis do modelo usando o p-valor. Usando a eliminação regressiva com um ponto de corte de p-valor de 0,05 (comece com o modelo completo e apare os preditores com valores de p maiores que 0,05), acabamos por eliminar os preditores <code>exclamação_asun</code>, <code>dólar</code>, <code>herdar</code>, e <code>cc</code>. O restante desta seção contará com este modelo menor, que é resumido na Tabela <a href="#tab:emailLogisticReducedModel">1.9</a>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">md2 &lt;-<span class="st"> </span><span class="kw">glm</span>(spam <span class="op">~</span><span class="st"> </span>a_multiplos <span class="op">+</span><span class="st"> </span>ganhador <span class="op">+</span><span class="st"> </span>formatacao <span class="op">+</span><span class="st"> </span>re_assun <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="st">            </span>anexo <span class="op">+</span><span class="st"> </span>senha, <span class="dt">data =</span> aux, <span class="dt">family =</span> binomial)</a>
+<a class="sourceLine" id="cb20-3" title="3"></a>
+<a class="sourceLine" id="cb20-4" title="4">table9 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">summary</span>(md2)<span class="op">$</span>coefficients)</a>
+<a class="sourceLine" id="cb20-5" title="5"><span class="kw">colnames</span>(table9) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Estimativa&#39;</span>, <span class="st">&#39;Erro Padrão&#39;</span>, <span class="st">&#39;Valor Z&#39;</span>, <span class="st">&#39;Pr(&gt;|z|)&#39;</span>)</a>
+<a class="sourceLine" id="cb20-6" title="6"></a>
+<a class="sourceLine" id="cb20-7" title="7">knitr<span class="op">::</span><span class="kw">kable</span>(table9, <span class="dt">digits =</span> <span class="dv">3</span> , <span class="dt">caption =</span> <span class="st">&#39;Tabela de resumo para o modelo de regressão logística para o filtro de spam, onde a seleção de variáveis foi executada.&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:emailLogisticReducedModel">Tabela 1.9: </span>Tabela de resumo para o modelo de regressão logística para o filtro de spam, onde a seleção de variáveis foi executada.</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Estimativa</th>
+<th align="right">Erro Padrão</th>
+<th align="right">Valor Z</th>
+<th align="right">Pr(&gt;|z|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(Intercept)</td>
+<td align="right">-0.806</td>
+<td align="right">0.088</td>
+<td align="right">-9.154</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td>a_multiplos</td>
+<td align="right">-2.751</td>
+<td align="right">0.307</td>
+<td align="right">-8.949</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td>ganhador</td>
+<td align="right">1.725</td>
+<td align="right">0.325</td>
+<td align="right">5.316</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td>formatacao</td>
+<td align="right">-1.586</td>
+<td align="right">0.120</td>
+<td align="right">-13.204</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td>re_assun</td>
+<td align="right">-3.098</td>
+<td align="right">0.365</td>
+<td align="right">-8.484</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td>anexo</td>
+<td align="right">0.213</td>
+<td align="right">0.057</td>
+<td align="right">3.718</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td>senha</td>
+<td align="right">-0.748</td>
+<td align="right">0.296</td>
+<td align="right">-2.529</td>
+<td align="right">0.011</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+<div class="exercise">
+<span id="exr:unnamed-chunk-15" class="exercise"><strong>Prática Orientada 1.10  </strong></span>Examine o resumo do modelo reduzido na Tabela <a href="#tab:emailLogisticReducedModel">1.9</a>, e, em particular, examine a linha a_múltiplos. A estimativa pontual é a mesma que encontramos antes, -1,81, ou é diferente? Explique por que isso pode acontecer.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a>
+</div>
+
+<hr />
+<p>As estimativas pontuais geralmente mudam um pouco – e muitas vezes – dependendo de quais outras variáveis estão incluídas no modelo. Isso geralmente é devido à colinearidade nas variáveis preditoras. Anteriormente, vimos isso no exemplo do leilão do Ebay quando comparamos o coeficiente de <code>condição</code> em um modelo de variável única e o coeficiente correspondente no modelo de regressão múltipla que usou três variáveis adicionais.</p>
+
+<div class="example">
+<span id="exm:exampleForSpamAndWinner" class="example"><strong>Exemplo 1.7  </strong></span>Os filtros de spam são criados para serem automatizados, o que significa que uma parte do software é gravada para coletar informações sobre os e-mails à medida que eles chegam e essas informações são colocadas na forma de variáveis. Essas variáveis são então colocadas em um algoritmo que usa um modelo estatístico, como o que ajustamos, para classificar o email. Suponha que escrevamos software para um filtro de spam usando o modelo reduzido mostrado na Tabela <a href="#tab:emailLogisticReducedModel">1.9</a>. Se um e-mail recebido tiver a palavra “vencedor”, isso aumentará ou diminuirá a probabilidade calculada do modelo de que o e-mail recebido é spam?
+</div>
+
+<p>O coeficiente estimado de <strong>ganhador</strong> é positivo (1,7250). Um coeficiente estimado positivo na regressão logística, assim como na regressão múltipla, corresponde a uma associação positiva entre o preditor e as variáveis de resposta ao considerar as demais variáveis do modelo. Como a variável de resposta assume valor 1 se um email é spam e 0 caso contrário, o coeficiente positivo indica que a presença de “vencedor”" em um email aumenta a probabilidade de que a mensagem seja spam.</p>
+
+<div class="example">
+<span id="exm:exampleForSpamAndFormat" class="example"><strong>Exemplo 1.8  </strong></span>Suponha que o mesmo email do Exemplo <a href="#exm:exampleForSpamAndWinner">1.7</a> estava no formato HTML, significando a variável <code>formatação</code> levou valor 1. Esta característica aumenta ou diminui a probabilidade de o email ser spam de acordo com o modelo?
+</div>
+
+<p>Como HTML corresponde a um valor de 1 na variável <code>formatação</code> e o coeficiente dessa variável é negativo (-1,5569), isso reduziria a estimativa de probabilidade proveniente do modelo.</p>
+</div>
+<div id="decisões-práticas-no-aplicativo-de-e-mail" class="section level3">
+<h3><span class="header-section-number">1.4.3</span> Decisões práticas no aplicativo de e-mail</h3>
+<p>Examplos <a href="#exm:exampleForSpamAndWinner">1.7</a> e <a href="#exm:exampleForSpamAndFormat">1.8</a> destacaram uma característica fundamental da regressão logística e múltipla. No exemplo do filtro de spam, algumas características do e-mail empurram a classificação de um e-mail na direção do spam, enquanto outras características o empurram na direção oposta.</p>
+<p>Se implementássemos um filtro de spam usando o modelo adequado, cada e-mail futuro analisado se encaixaria em uma das três categorias com base nas características do e-mail:</p>
+<ul>
+<li><p>As características do e-mail geralmente indicam que o e-mail não é spam e, portanto, a probabilidade resultante de que o e-mail é spam é bastante baixa, digamos, abaixo de 0,05.</p></li>
+<li><p>As características geralmente indicam que o email é spam e, portanto, a probabilidade resultante de o email ser spam é muito grande, digamos, acima de 0,95.</p></li>
+<li><p>As características se equilibram umas às outras em termos de evidência a favor e contra a mensagem sendo classificada como spam. Sua probabilidade cai no intervalo restante, ou seja, o e-mail não pode ser classificado adequadamente como spam ou não spam.</p></li>
+</ul>
+<p>Se estivéssemos gerenciando um serviço de e-mail, teríamos que pensar sobre o que deveria ser feito em cada uma dessas três instâncias. Em um aplicativo de email, geralmente há apenas duas possibilidades: filtrar o email da caixa de entrada normal e colocá-lo em um “spambox”, ou deixar que o email vá para a caixa de entrada normal.</p>
+<hr />
+
+<div class="exercise">
+<span id="exr:unnamed-chunk-16" class="exercise"><strong>Prática Orientada 1.11  </strong></span>O primeiro e o segundo cenários são intuitivos. Se a evidência sugerir fortemente que uma mensagem não é spam, envie-a para a caixa de entrada. Se a evidência sugerir fortemente que a mensagem é spam, envie-a para o spambox. Como devemos lidar com os e-mails na terceira categoria?<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a>
+</div>
+
+<hr />
+<hr />
+
+<div class="exercise">
+<span id="exr:unnamed-chunk-17" class="exercise"><strong>Prática Orientada 1.12  </strong></span>Suponha que aplicamos o modelo logístico que construímos como filtro de spam e que 100 mensagens são colocadas na spambox ao longo de 3 meses. Se usássemos as diretrizes acima para colocar mensagens na spambox, sobre quantas mensagens legítimas (não spam) você esperaria encontrar entre as 100 mensagens?<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a>
+</div>
+
+<hr />
+<p>Quase qualquer classificador terá algum erro. Nas diretrizes do filtro de spam acima, decidimos que não há problema em permitir que até 5% das mensagens na caixa de spam sejam mensagens reais. Se quiséssemos dificultar um pouco a classificação de mensagens como spam, poderíamos usar um limite de 0,99. Isso teria dois efeitos. Por elevar o padrão do que pode ser classificado como spam, reduz o número de bons emails classificados como spam. No entanto, ele também não classificará corretamente uma fração aumentada de mensagens spam. Não importa a complexidade e a confiança que possamos ter em nosso modelo, essas considerações práticas são absolutamente cruciais para criar um filtro de spam útil. Sem eles, poderíamos fazer mais mal do que bem usando nosso modelo estatístico.</p>
+</div>
+<div id="diagnóstico-para-o-classificador-de-e-mail" class="section level3">
+<h3><span class="header-section-number">1.4.4</span> Diagnóstico para o classificador de e-mail</h3>
+<div class="alert alert-info">
+<p><strong>Condições de regressão logística</strong>: Existem duas condições chave para ajustar um modelo de regressão logística:</p>
+<ul>
+<li><p>Cada preditor <span class="math inline">\(x_i\)</span> está linearmente relacionado a logit<span class="math inline">\((p_i)\)</span> se todos os outros preditores forem mantidos constantes.</p></li>
+<li><p>O modelo que relaciona o parâmetro <span class="math inline">\(p_i\)</span> com os preditores <span class="math inline">\(x_{1,i}, x_{2,i}, \dots, x_{k,i}\)</span> assemelha-se muito à verdadeira relação entre o parâmetro e os preditores.</p></li>
+<li><p>Cada resultado <span class="math inline">\(Y_i\)</span> é independente dos outros resultados.</p></li>
+</ul>
+</div>
+<p>A primeira condição do modelo de regressão logística não é facilmente verificada sem uma quantidade razoavelmente grande de dados. Felizmente, temos 3.921 e-mails em nosso conjunto de dados! Vamos primeiro visualizar esses dados traçando a classificação real dos e-mails em relação às probabilidades ajustadas do modelo, como mostrado na Figura~ <a href="#fig:logisticModelPredict">1.7</a>. A grande maioria dos emails (spam ou não) ainda tem probabilidades abaixo de 0,5.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">library</span>(splines)</a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="kw">data</span>(email)</a>
+<a class="sourceLine" id="cb21-3" title="3">e &lt;-<span class="st"> </span>email</a>
+<a class="sourceLine" id="cb21-4" title="4">e<span class="op">$</span>cc       &lt;-<span class="st"> </span><span class="kw">ifelse</span>(email<span class="op">$</span>cc <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb21-5" title="5">e<span class="op">$</span>attach   &lt;-<span class="st"> </span><span class="kw">ifelse</span>(email<span class="op">$</span>attach <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb21-6" title="6">e<span class="op">$</span>dollar   &lt;-<span class="st"> </span><span class="kw">ifelse</span>(email<span class="op">$</span>dollar <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb21-7" title="7">e<span class="op">$</span>inherit  &lt;-<span class="st"> </span><span class="kw">ifelse</span>(email<span class="op">$</span>inherit <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb21-8" title="8">e<span class="op">$</span>password &lt;-<span class="st"> </span><span class="kw">ifelse</span>(email<span class="op">$</span>password <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb21-9" title="9">g &lt;-<span class="st"> </span><span class="kw">glm</span>(spam <span class="op">~</span><span class="st"> </span>to_multiple <span class="op">+</span><span class="st"> </span>winner <span class="op">+</span><span class="st"> </span>format <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-10" title="10"><span class="st">                </span>re_subj <span class="op">+</span><span class="st"> </span>exclaim_subj <span class="op">+</span></a>
+<a class="sourceLine" id="cb21-11" title="11"><span class="st">                </span>attach <span class="op">+</span><span class="st"> </span>dollar <span class="op">+</span></a>
+<a class="sourceLine" id="cb21-12" title="12"><span class="st">                </span>inherit <span class="op">+</span><span class="st"> </span>password, <span class="co"># +</span></a>
+<a class="sourceLine" id="cb21-13" title="13">                <span class="co">#num_char + line_breaks + exclaim_mess,</span></a>
+<a class="sourceLine" id="cb21-14" title="14">                <span class="dt">data =</span> e, <span class="dt">family =</span> binomial)</a>
+<a class="sourceLine" id="cb21-15" title="15"><span class="co"># summary(g)</span></a>
+<a class="sourceLine" id="cb21-16" title="16">p  &lt;-<span class="st"> </span><span class="kw">predict</span>(g, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)</a>
+<a class="sourceLine" id="cb21-17" title="17">p. &lt;-<span class="st"> </span>p</a>
+<a class="sourceLine" id="cb21-18" title="18"></a>
+<a class="sourceLine" id="cb21-19" title="19"><span class="co"># logisticModelPredict</span></a>
+<a class="sourceLine" id="cb21-20" title="20"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb21-21" title="21">noise &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">nrow</span>(e), <span class="dt">sd =</span> <span class="fl">0.08</span>)</a>
+<a class="sourceLine" id="cb21-22" title="22"><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-23" title="23"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">size =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-24" title="24"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(p, e<span class="op">$</span>spam <span class="op">+</span><span class="st"> </span>noise), <span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-25" title="25"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Probabilidade Predita&#39;</span>, <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-26" title="26"><span class="st">  </span><span class="kw">xlim</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-27" title="27"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="dv">1</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&#39;0 </span><span class="ch">\n</span><span class="st">(Não é Spam)&#39;</span>, <span class="st">&#39;1 </span><span class="ch">\n</span><span class="st">(Spam)&#39;</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-28" title="28"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">90</span>, <span class="dt">hjust =</span> <span class="fl">.5</span>))</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:logisticModelPredict"></span>
+<img src="ch8_reg_mult_log_files/figure-html/logisticModelPredict-1.png" alt="A probabilidade prevista de que cada um dos 3.912 e-mails seja spam é classificada por seu agrupamento, spam ou não. Ruídos (pequenos deslocamentos verticais aleatórios) foram adicionados a cada ponto para que os pontos com valores quase idênticos não sejam representados exatamente um em cima do outro. Isto torna possível ver mais observações." width="100%" height="30%" />
+<p class="caption">
+Figura 1.7: A probabilidade prevista de que cada um dos 3.912 e-mails seja spam é classificada por seu agrupamento, spam ou não. Ruídos (pequenos deslocamentos verticais aleatórios) foram adicionados a cada ponto para que os pontos com valores quase idênticos não sejam representados exatamente um em cima do outro. Isto torna possível ver mais observações.
+</p>
+</div>
+<p>A princípio, isso pode parecer muito desanimador: ajustamos um modelo logístico para criar um filtro de spam, mas nenhum e-mail tem uma probabilidade ajustada de ser spam acima de 0,75. Não se desespere; Vamos discutir maneiras de melhorar o modelo através do uso de melhores variáveis na Seção <a href="#improvingTheSetOfVariablesForASpamFilter">1.4.5</a>.</p>
+<p>Gostaríamos de avaliar a qualidade do nosso modelo. Por exemplo, podemos perguntar: se olharmos para os e-mails que modelamos como tendo 10% de chance de ser spam, descobrimos que cerca de 10% deles são realmente spam? Para nos ajudar, emprestamos um método estatístico avançado chamado <strong>splines naturais</strong> que estima a probabilidade local sobre a região de 0,00 a 0,75 (a maior probabilidade prevista foi de 0,73, portanto evitamos extrapolar). Tudo o que você precisa saber sobre splines naturais para entender o que estamos fazendo é que eles são usados para encaixar linhas flexíveis em vez de linhas retas.</p>
+<p>O ajuste da curva usando splines naturais é mostrado na Figura <a href="#fig:logisticModelSpline">1.8</a> como uma linha preta sólida. Se o modelo logístico se ajustar bem, a curva deve seguir de perto a linha tracejada <span class="math inline">\(y=x\)</span>. Adicionamos sombreamento para representar o limite de confiança da linha curva para esclarecer quais flutuações podem ser plausivelmente devido ao acaso. Mesmo com essa confiança, há pontos fracos na suposição do primeiro modelo. A curva sólida e a sua margem de confiança mergulham abaixo da linha tracejada em cerca de 0,1 a 0,3, e depois flutuam acima da linha tracejada em cerca de 0,35 a 0,55. Esses desvios indicam que o modelo que relaciona o parâmetro aos preditores não se parece muito com o relacionamento verdadeiro.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">library</span>(splines)</a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="kw">data</span>(email)</a>
+<a class="sourceLine" id="cb22-3" title="3">e &lt;-<span class="st"> </span>email</a>
+<a class="sourceLine" id="cb22-4" title="4"></a>
+<a class="sourceLine" id="cb22-5" title="5">e<span class="op">$</span>cc       &lt;-<span class="st"> </span><span class="kw">ifelse</span>(email<span class="op">$</span>cc <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb22-6" title="6">e<span class="op">$</span>attach   &lt;-<span class="st"> </span><span class="kw">ifelse</span>(email<span class="op">$</span>attach <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb22-7" title="7">e<span class="op">$</span>dollar   &lt;-<span class="st"> </span><span class="kw">ifelse</span>(email<span class="op">$</span>dollar <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb22-8" title="8">e<span class="op">$</span>inherit  &lt;-<span class="st"> </span><span class="kw">ifelse</span>(email<span class="op">$</span>inherit <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb22-9" title="9">e<span class="op">$</span>password &lt;-<span class="st"> </span><span class="kw">ifelse</span>(email<span class="op">$</span>password <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb22-10" title="10"></a>
+<a class="sourceLine" id="cb22-11" title="11">g &lt;-<span class="st"> </span><span class="kw">glm</span>(spam <span class="op">~</span><span class="st"> </span>to_multiple <span class="op">+</span><span class="st"> </span>winner <span class="op">+</span><span class="st"> </span>format <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-12" title="12"><span class="st">           </span>re_subj <span class="op">+</span><span class="st"> </span>exclaim_subj <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-13" title="13"><span class="st">           </span>attach <span class="op">+</span><span class="st"> </span>dollar <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-14" title="14"><span class="st">           </span>inherit <span class="op">+</span><span class="st"> </span>password, <span class="co"># +</span></a>
+<a class="sourceLine" id="cb22-15" title="15">         <span class="co">#num_char + line_breaks + exclaim_mess,</span></a>
+<a class="sourceLine" id="cb22-16" title="16">         <span class="dt">data =</span> e, <span class="dt">family =</span> binomial)</a>
+<a class="sourceLine" id="cb22-17" title="17"><span class="co"># summary(g)</span></a>
+<a class="sourceLine" id="cb22-18" title="18">p  &lt;-<span class="st"> </span><span class="kw">predict</span>(g, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)</a>
+<a class="sourceLine" id="cb22-19" title="19">p. &lt;-<span class="st"> </span>p</a>
+<a class="sourceLine" id="cb22-20" title="20">q &lt;-<span class="st"> </span>p</a>
+<a class="sourceLine" id="cb22-21" title="21"></a>
+<a class="sourceLine" id="cb22-22" title="22"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb22-23" title="23">noise &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">nrow</span>(e), <span class="dt">sd =</span> <span class="fl">0.08</span>)</a>
+<a class="sourceLine" id="cb22-24" title="24"></a>
+<a class="sourceLine" id="cb22-25" title="25"><span class="co"># parte do poligono </span></a>
+<a class="sourceLine" id="cb22-26" title="26">ns1 &lt;-<span class="st"> </span><span class="dv">7</span></a>
+<a class="sourceLine" id="cb22-27" title="27">g1 &lt;-<span class="st"> </span><span class="kw">lm</span>(e<span class="op">$</span>spam <span class="op">~</span><span class="st"> </span><span class="kw">ns</span>(p, ns1))</a>
+<a class="sourceLine" id="cb22-28" title="28">p  &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="kw">max</span>(p), <span class="dt">length.out =</span> <span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb22-29" title="29">Y  &lt;-<span class="st"> </span><span class="kw">predict</span>(g1,</a>
+<a class="sourceLine" id="cb22-30" title="30">              <span class="kw">data.frame</span>(<span class="kw">ns</span>(p, ns1)),</a>
+<a class="sourceLine" id="cb22-31" title="31">              <span class="dt">se.fit =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb22-32" title="32">yb &lt;-<span class="st"> </span>Y<span class="op">$</span>fit <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>Y<span class="op">$</span>se.fit</a>
+<a class="sourceLine" id="cb22-33" title="33">yt &lt;-<span class="st"> </span><span class="kw">rev</span>(Y<span class="op">$</span>fit <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>Y<span class="op">$</span>se.fit)</a>
+<a class="sourceLine" id="cb22-34" title="34"></a>
+<a class="sourceLine" id="cb22-35" title="35"></a>
+<a class="sourceLine" id="cb22-36" title="36"><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-37" title="37"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(q, e<span class="op">$</span>spam<span class="op">+</span>noise<span class="op">/</span><span class="dv">5</span>), <span class="dt">color =</span> <span class="st">&#39;skyblue3&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-38" title="38"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">0</span><span class="op">:</span><span class="dv">1</span>), <span class="dt">linetype =</span> <span class="st">&#39;dashed&#39;</span>) <span class="op">+</span><span class="st">   </span><span class="kw">xlim</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-39" title="39"><span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="kw">c</span>(p, <span class="kw">rev</span>(p)), <span class="kw">c</span>(yb, yt)), <span class="dt">fill =</span> <span class="st">&#39;gold2&#39;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-40" title="40"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(p, Y<span class="op">$</span>fit)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-41" title="41"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">size =</span> <span class="dv">1</span>), </a>
+<a class="sourceLine" id="cb22-42" title="42">        <span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">90</span>, <span class="dt">hjust =</span> <span class="fl">.5</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-43" title="43"><span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">0.83</span>, <span class="dt">y =</span> <span class="fl">0.57</span>, <span class="dt">xend =</span> <span class="fl">0.8</span>, <span class="dt">yend =</span> <span class="fl">0.785</span>), </a>
+<a class="sourceLine" id="cb22-44" title="44">               <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.2</span>, <span class="st">&quot;cm&quot;</span>))) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-45" title="45"><span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">0.36</span>, <span class="dt">y =</span> <span class="fl">0.54</span>, <span class="dt">xend =</span> <span class="fl">0.45</span>, <span class="dt">yend =</span> <span class="fl">0.52</span>), </a>
+<a class="sourceLine" id="cb22-46" title="46">               <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.2</span>, <span class="st">&quot;cm&quot;</span>))) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-47" title="47"><span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">0.6</span>, <span class="dt">y =</span> <span class="fl">0.36</span>, <span class="dt">xend =</span> <span class="fl">0.7</span>, <span class="dt">yend =</span> <span class="fl">0.61</span>), </a>
+<a class="sourceLine" id="cb22-48" title="48">               <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.2</span>, <span class="st">&quot;cm&quot;</span>))) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-49" title="49"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">0.88</span>, <span class="dt">y =</span> <span class="fl">0.48</span>, <span class="dt">size =</span> <span class="dv">3</span>, </a>
+<a class="sourceLine" id="cb22-50" title="50">           <span class="dt">label =</span> <span class="st">&quot;O que esperamos </span><span class="ch">\n</span><span class="st">se o modelo logístico </span><span class="ch">\n</span><span class="st">é razoável&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-51" title="51"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">0.25</span>, <span class="dt">y =</span> <span class="fl">0.6</span>, <span class="dt">size =</span> <span class="dv">3</span>, </a>
+<a class="sourceLine" id="cb22-52" title="52">           <span class="dt">label =</span> <span class="st">&quot;Probabilidades localmente </span><span class="ch">\n</span><span class="st">estimadas com </span><span class="ch">\n</span><span class="st">limites de confiança&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-53" title="53"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">0.6</span>, <span class="dt">y =</span> <span class="fl">0.27</span>, <span class="dt">size =</span> <span class="dv">3</span>, </a>
+<a class="sourceLine" id="cb22-54" title="54">           <span class="dt">label =</span> <span class="st">&quot;Os limites se tornam </span><span class="ch">\n</span><span class="st">amplos porque não </span><span class="ch">\n</span><span class="st">são encontrados muitos </span><span class="ch">\n</span><span class="st">dados até o momento&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-55" title="55"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Probabilidade Predita&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Spam&#39;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-56" title="56"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.2</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&#39;0 </span><span class="ch">\n</span><span class="st">(Não é Spam)&#39;</span>, <span class="st">&#39;0.2&#39;</span>, <span class="st">&#39;0.4&#39;</span>, <span class="st">&#39;0.6&#39;</span>, <span class="st">&#39;0.8&#39;</span>, <span class="st">&#39;1 </span><span class="ch">\n</span><span class="st">(Spam)&#39;</span>))  </a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:logisticModelSpline"></span>
+<img src="ch8_reg_mult_log_files/figure-html/logisticModelSpline-1.png" alt="A linha preta sólida fornece a estimativa empírica da probabilidade de observações com base em suas probabilidades previstas (limites de confiança também são mostrados para essa linha), que é ajustada usando splines naturais. Uma pequena quantidade de ruído foi adicionada às observações na parcela para permitir que mais observações fossem vistas." width="100%" height="100%" />
+<p class="caption">
+Figura 1.8: A linha preta sólida fornece a estimativa empírica da probabilidade de observações com base em suas probabilidades previstas (limites de confiança também são mostrados para essa linha), que é ajustada usando splines naturais. Uma pequena quantidade de ruído foi adicionada às observações na parcela para permitir que mais observações fossem vistas.
+</p>
+</div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">p  &lt;-<span class="st"> </span>p.</a></code></pre></div>
+<p>Pudemos avaliar o segundo pressuposto do modelo de regressão logística – independência dos desfechos – utilizando os resíduos do modelo. Os resíduos de um modelo de regressão logística são calculados da mesma forma que na regressão múltipla: o resultado observado menos o resultado esperado. Para a regressão logística, o valor esperado do resultado é a probabilidade ajustada para a observação, e o resíduo pode ser escrito como</p>
+<p><span class="math display">\[\begin{align*}
+e_i = Y_i - \hat{p}_i
+\end{align*}\]</span></p>
+<p>Poderíamos plotar esses resíduos contra uma variedade de variáveis ou em sua ordem de coleta, como fizemos com os resíduos em regressão múltipla. No entanto, como o modelo precisará ser revisado para classificar efetivamente o spam e já foi visto gráficos residuais semelhantes, nós não vamos investigar os resíduos aqui.</p>
+</div>
+<div id="improvingTheSetOfVariablesForASpamFilter" class="section level3">
+<h3><span class="header-section-number">1.4.5</span> Melhorando o conjunto de variáveis para um filtro de spam</h3>
+<p>Se estivéssemos criando um filtro de spam para um serviço de e-mail que gerenciava muitas contas (por exemplo, Gmail ou Hotmail), gastaríamos muito mais tempo pensando em variáveis adicionais que poderiam ser úteis para classificar e-mails como spam ou não. Também usaríamos transformações ou outras técnicas que nos ajudariam a incluir variáveis numéricas fortemente distorcidas como preditores.</p>
+<p>Reserve alguns minutos para pensar em variáveis adicionais que podem ser úteis na identificação de spam. Abaixo está uma lista de variáveis que achamos que podem ser úteis:</p>
+<ul>
+<li><p><strong>(1)</strong> Uma variável indicadora pode ser usada para representar se houve correspondência bidirecional prévia com o remetente de uma mensagem. Por exemplo, se você enviou uma mensagem para <a href="mailto:joao@exemplo.com" class="email">joao@exemplo.com</a> e, em seguida, João enviou um e-mail para você, essa variável levaria o valor 1 para o e-mail que João enviou. Se você nunca tivesse enviado um e-mail para John, a variável seria definida como 0.</p></li>
+<li><p><strong>(2)</strong> Uma segunda variável indicadora poderia utilizar as informações de sinalização de spam anteriores da conta. A variável pode ter valor 1 se o remetente da mensagem já enviou mensagens marcadas como spam.</p></li>
+<li><p><strong>(3)</strong> Uma terceira variável indicadora pode sinalizar emails que contêm links incluídos em mensagens de spam anteriores. Se tal link for encontrado, defina a variável como 1 para o email. Caso contrário, defina-a como 0.</p></li>
+</ul>
+<p>As variáveis descritas acima adotam uma das duas abordagens. A variável (1) é especialmente projetada para aproveitar o fato de que o spam raramente é enviado entre indivíduos que possuem comunicação bidirecional. Variáveis (2) e (3) são especialmente projetadas para sinalizar spammers (quem envia muito spam) comuns ou spams comuns. Enquanto nós teríamos que verificar usando os dados que cada uma das variáveis é efetiva, estas parecem ser idéias promissoras.</p>
+<p>A Tabela <a href="#tab:emailTableOfSpamAnd">1.10</a> mostra uma tabela de contingência para spam e também para a nova variável descrita em (1) acima. Se olharmos para os 1.090 e-mails em que houve correspondência com o remetente nos últimos 30 dias, nenhuma dessas mensagens foi spam. Isso sugere que a variável (1) seria muito eficaz para classificar com precisão algumas mensagens como não spam. Com essa variável única, poderíamos enviar cerca de 28% de mensagens para a caixa de entrada com confiança de que quase nenhuma é spam.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">table10 &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">367</span>, <span class="dv">0</span>, <span class="dv">367</span>), <span class="kw">c</span>(<span class="dv">2464</span>, <span class="dv">1090</span>, <span class="dv">3554</span>), <span class="kw">c</span>(<span class="dv">2831</span>, <span class="dv">1090</span>, <span class="dv">3921</span>))</a>
+<a class="sourceLine" id="cb24-2" title="2"><span class="kw">colnames</span>(table10) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;troca de emails prévia (não)&#39;</span>, <span class="st">&#39;troca de emails prévia (sim)&#39;</span>, <span class="st">&#39;Total&#39;</span>)</a>
+<a class="sourceLine" id="cb24-3" title="3"><span class="kw">rownames</span>(table10) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;spam&#39;</span>, <span class="st">&#39;não spam&#39;</span>, <span class="st">&#39;total&#39;</span>)</a>
+<a class="sourceLine" id="cb24-4" title="4"></a>
+<a class="sourceLine" id="cb24-5" title="5">knitr<span class="op">::</span><span class="kw">kable</span>(table10, <span class="dt">align =</span> <span class="st">&#39;c&#39;</span>, </a>
+<a class="sourceLine" id="cb24-6" title="6">             <span class="dt">caption =</span> <span class="st">&#39;Uma tabela de contingência para spam e uma nova variável que representa se houve correspondência com o remetente nos últimos 30 dias.&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:emailTableOfSpamAnd">Tabela 1.10: </span>Uma tabela de contingência para spam e uma nova variável que representa se houve correspondência com o remetente nos últimos 30 dias.</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">troca de emails prévia (não)</th>
+<th align="center">troca de emails prévia (sim)</th>
+<th align="center">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>spam</td>
+<td align="center">367</td>
+<td align="center">0</td>
+<td align="center">367</td>
+</tr>
+<tr class="even">
+<td>não spam</td>
+<td align="center">2464</td>
+<td align="center">1090</td>
+<td align="center">3554</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td align="center">2831</td>
+<td align="center">1090</td>
+<td align="center">3921</td>
+</tr>
+</tbody>
+</table>
+<p>As variáveis descritas em (2) e (3) forneceriam uma excelente base para distinguir mensagens provenientes de spammers conhecidos ou mensagens que recebam uma forma conhecida de spam. Para utilizar essas variáveis, precisaríamos criar bancos de dados: um contendo endereços de e-mail de spammers conhecidos e um contendo URLs encontrados em mensagens de spam conhecidas. Nosso acesso a essas informações é limitado, por isso não podemos implementar essas duas variáveis neste livro. No entanto, se formos contratados por um serviço de e-mail para criar um filtro de spam, esses serão os próximos passos importantes.</p>
+<p>Além de encontrar mais e melhores preditores, precisaríamos criar um modelo de regressão logística personalizado para cada conta de e-mail. Isso pode soar como uma tarefa intimidadora, mas sua complexidade não é tão assustadora quanto parece à primeira vista. Salvaremos os detalhes de um curso de estatística em que a programação de computadores desempenha um papel mais central.</p>
+<p>Para a tarefa extremamente desafiadora de classificar mensagens de spam, fizemos muito progresso. Vimos que variáveis simples de e-mail, como o formato, a inclusão de certas palavras e outras características circunstanciais, fornecem informações úteis para a classificação de spam. Muitos desafios permanecem, desde a melhor compreensão da regressão logística até a realização da programação de computadores necessária, mas a conclusão de tal tarefa está quase ao seu alcance.</p>
+<hr />
+<center>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
+</center>
+
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Diez DM, Barr CD, Cetinkaya-Rundel M. 2015.: OpenIntro data sets and supplement functions: github.com/OpenIntroOrg/openintro-r-package<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>Sim. A variabilidade constante, os resíduos quase normais e a linearidade parecem razoáveis.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p><span class="math inline">\(\hat{y} = 36,21 + 5,13x_1 + 1,08x_2 – 0,03x_3 + 7,29x_4\)</span>, e existem <span class="math inline">\(k=4\)</span> variáveis preditoras.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>É a diferença média no preço do leilão para cada roda Wii incluída ao manter as outras variáveis constantes. A estimativa pontual é <span class="math inline">\(b_4 = 7.29\)</span>.<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p><span class="math inline">\(e_i = y_i - \hat{y_i} = 51,55 – 49,62 = 1,93\)</span>, onde 49,62 foi calculado utilizando os valores das variáveis da observação e a equação identificada na Prática Orientada <a href="#exr:eqForMultipleRegrOfTotalPrForAllPredictorsWithCoefficients">1.2</a>.<a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p>Três das variáveis (condição, foto, e rodas) assumem o valor 0, mas a duração do leilão é sempre um ou mais dias. Se o leilão não estiver em dia, ninguém poderá fazer lances! Isso significa que o preço total do leilão seria sempre zero para tal leilão; a interpretação do intercepto nesse cenário não é perspicaz.<a href="#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p><span class="math inline">\(R^2 = 1 - \frac{23,34}{83,06} = 0,719\)</span>.<a href="#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p>Na regressão múltipla, os graus de liberdade associados à variância da estimativa dos resíduos são <span class="math inline">\(n-k-1\)</span>, não <span class="math inline">\(n-1\)</span>. Por exemplo, se fôssemos fazer previsões para novos dados usando nosso modelo atual, descobriríamos que o <span class="math inline">\(R^2\)</span> não ajustado é uma estimativa excessivamente otimista da redução na variação na resposta, e usando os graus de liberdade na fórmula do <span class="math inline">\(R^2\)</span> ajustado ajuda a corrigir este viés.<a href="#fnref8" class="footnote-back">↩</a></p></li>
+<li id="fn9"><p><span class="math inline">\(R_{aj}^2 = 1 - \frac{23.34}{83.06}\times \frac{141-1}{141-4-1} = 0.711\)</span>.<a href="#fnref9" class="footnote-back">↩</a></p></li>
+<li id="fn10"><p>O <span class="math inline">\(R^2\)</span> não ajustado permaneceria o mesmo e o <span class="math inline">\(R^2\)</span> ajustado cairia.<a href="#fnref10" class="footnote-back">↩</a></p></li>
+<li id="fn11"><p>O preditor foto está pronto para eliminação, pois tem o maior p-valor. Além disso, como esse p-valor é maior que 0,05, na verdade o eliminamos do modelo.<a href="#fnref11" class="footnote-back">↩</a></p></li>
+<li id="fn12"><p>Lembre-se que se outliers estão presentes em variáveis preditoras, as observações correspondentes podem ser especialmente influentes no modelo resultante. Essa é a motivação para omitir as variáveis numéricas, como o número de caracteres e as quebras de linha nos e-mails, que vimos anteriormente. Estas variáveis exibiram uma inclinação extrema. Poderíamos resolver esse problema transformando essas variáveis (por exemplo, usando uma transformação logarítmica), mas omitiremos essa investigação adicional para fins de brevidade.<a href="#fnref12" class="footnote-back">↩</a></p></li>
+<li id="fn13"><p>A nova estimativa é diferente: -2,75. Esse novo valor representa o coeficiente estimado quando também estamos contabilizando outras variáveis no modelo de regressão logística.<a href="#fnref13" class="footnote-back">↩</a></p></li>
+<li id="fn14"><p>Neste aplicativo em particular, devemos enviar mais e-mails para a caixa de entrada, em vez de colocar mensagens boas na spambox. Então, em resumo: os e-mails da primeira e da última categorias vão para a caixa de entrada normal e os do segundo cenário vão para a caixa de spambox.<a href="#fnref14" class="footnote-back">↩</a></p></li>
+<li id="fn15"><p>Primeiro, note que propusemos um ponto de corte para a probabilidade prevista de 0,95 para spam. Na pior das hipóteses, todas as mensagens na spambox tinham a probabilidade mínima igual a cerca de 0,95. Assim, devemos esperar encontrar cerca de 5 ou menos mensagens legítimas entre as 100 mensagens colocadas no spambox.<a href="#fnref15" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "serif",
+"size": 1
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["ch8_reg_mult_log.pdf", "ch8_reg_mult_log.epub"],
+"toc": {
+"collapse": "subsubsection",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
