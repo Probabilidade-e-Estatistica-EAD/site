@@ -15,4 +15,5 @@ A numeração dos capítulos POSSUI relação direta com o livro.
 
 [Capítulo 1 - Introdução](capitulo1_introducao.pdf)
 
+[Capítulo 2 - Probabilidade](capitulo2_probabilidade.pdf)
 
