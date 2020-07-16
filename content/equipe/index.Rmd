@@ -82,11 +82,11 @@ title: Equipe
         </tr>
         <tr>
             <td>
-              <img alt="" src="thierre.jpg" style="width: 250px; height: 300px;" />
+              <img alt="" src="maico.jpg" style="width: 250px; height: 300px;" />
             </td>
             <td style="vertical-align:middle">
-                Thierre Francisco Da Conceição <br>
-                thierre.francisco@ufrgs.br
+                Maico Henrique Mann  <br>
+                github.com/mhmann
             </td>
         </tr>
     </tbody>
@@ -131,6 +131,20 @@ title: Equipe
               </a>
             </td>        
         </tr>
+            </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <img alt="" src="thierre.jpg" style="width: 250px; height: 300px;" />
+            </td>
+            <td style="vertical-align:middle">
+                Thierre Francisco Da Conceição <br>
+                thierre.francisco@ufrgs.br
+            </td>
+        </tr>
+        
+        
     </tbody>
 </table>
 
