@@ -130,11 +130,6 @@ title: Equipe
                 Currículo Lattes
               </a>
             </td>        
-        </tr>
-            </a>
-            </td>
-        </tr>
-        <tr>
             <td>
               <img alt="" src="thierre.jpg" style="width: 250px; height: 300px;" />
             </td>
@@ -147,4 +142,3 @@ title: Equipe
         
     </tbody>
 </table>
-

@@ -119,7 +119,7 @@ home = ["HTML", "RSS", "Algolia"]
   
   [[params.addtional_menus]]
   title =  "Tutorial site"
-  href =  "tutorial/index.html"
+  href =  "tutorial/tutorial_gestao/prefácio.html"
   
  # [[params.addtional_menus]] 
 #  title =  "Ex de link externo"
