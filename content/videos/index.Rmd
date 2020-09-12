@@ -13,56 +13,36 @@ As videoaulas estão dispostas na ordem em que os conteúdos são ministrados ao
 
 1.1 Introdução
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1fFNro3Jnp27b2FaNG5ToFh2NizqzEIUr/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Q2E1teXk5pE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
 
 ### Estatística Descritiva
 
 1.2 Distribuições de frequência
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1WS5WkFcfX53zYbHJ_1bAJYRr1nmsaenm/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Nig5J7L5-ec" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 1.3 Representações gráficas
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1mAt58MJedvQkq9JOOcLC1JOTqgKENR_F/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/sNwuNYq6pzc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 1.4 Medidas descritivas
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1PRwwE_ehiABCAqc581QIovjddnMJ2LTt/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4n1Ri6Qj5ZY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 1.5 Análise exploratória 
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1zXUWbhLiD4fkHYmVhS_viWFrAXckgNI7/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ekZCsPEz228" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Probabilidade
 
 1.6 Introdução e Teoremas  
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1UTkv5cNjz-JZNyjncvxjUL0cJCc9m1Ra/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ejMvaoUZigI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 1.7 Probabilidade condicional, independência e teorema de Bayes  
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1RMqPdB6xdlusI9MKFOBDO-rMNeX1lBqn/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/wcMZtwAubsA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 ## Área 2
