@@ -51,33 +51,21 @@ As videoaulas estão dispostas na ordem em que os conteúdos são ministrados ao
 
 2.1 Discretas  
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1UsIXZAsAxGEjjpoRuJDl9g6x3eE4u1fa/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4F2dTdIGkdg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 2.2 Contínuas 
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1w-5XppmZQEPKtO_OuNgOJ7E84RauO2n5/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ec7vw9v2ogQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Inferência Estatística
 
 2.3 Distribuições amostrais e TCL 
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1T8OkO3W_O02Ijp2Yabh8EzoAbIl39BMm/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/UeKpLxrX8Mc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 2.4 Estimação  
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1v8V3YhC9q97NBiUcWOW3oUvKlGrP1Ch4/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Cwi5uAYF0pM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Área 3
 
@@ -85,47 +73,29 @@ As videoaulas estão dispostas na ordem em que os conteúdos são ministrados ao
 
 3.1 Introdução
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1wMBXHAR8jjqbY4El1AZnDYPyD5jjlkZl/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/gbk5SJBtfjg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 3.2 Médias
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1uMPHlvY3RLvZm-sbgeMzQSi-aiFiW_nd/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nlHGE94yrjA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 3.3 Variâncias
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1br_IiVojwbVKn596GDNz0zz3361qcXJk/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eqx0p3UqULQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 3.4 Proporções
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1RdxYgzbTmWrE3nrHj66V0SQ7N6pOW_fk/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/cmiuxjJgzxY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Regressão Linear
 
 3.5 Coeficiente de correlação  
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1WNKGaTtAEZpjQlFh7McOUQfdfIuJ28Xj/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/PbeMuR1HB9s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 3.6 Regressao linear simples  
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe src="https://drive.google.com/file/d/1MyKU3cFUeyrrM6uk30JLgtLKzZsl1h-6/preview" allowfullscreen="" class="embed-responsive-item">
-  </iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/PVHqrFKPYS0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 
