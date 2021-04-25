@@ -1,6 +1,0 @@
----
-site: blogdown:::blogdown_site
----
-
-<!--chapter:end:index.Rmd-->
-
