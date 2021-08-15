@@ -65,11 +65,21 @@ Nesta aplicação é possível exercitar os conceitos vistos na aula 2.3 Distrib
 
 O aplicativo possui duas abas:
 
-(@) Simulação - É onde a simulação é feita, para entender as Distribuições Amostrais e o Teorema Central do Limite.
+1. Simulação - É onde a simulação é feita, para entender as Distribuições Amostrais e o Teorema Central do Limite.
 
-(@) Como Usar - É apresentada uma breve descrição sobre o teorema e explica como funciona o app, explicando como utilizar os controles e como interpretar os gráficos apresentados.
+2. Como Usar - É apresentada uma breve descrição sobre o teorema e explica como funciona o app, explicando como utilizar os controles e como interpretar os gráficos apresentados.
 
+<a href="https://brunamdalmoro.shinyapps.io/Testes_de_Hipoteses/" target="_blank">
+  Teste de hipóteses
+</a>
 
+Nesta aplicação vocês poderão exercitar os conceitos vistos na aula 3-2 Testes de Hipoteses Medias
+
+1. Ao entrar no link, aparecerá uma aba que inicia com a seleção do teste de hipótese a ser escolhido entre os testes de médias vistos na aula desta semana.
+
+2. Na sequência estarão as caixinhas para informar os dados amostrais para a utilização do teste.
+
+3. Finalizada a etapa de informar os dados, ao clicar em "Realizar teste" será apresentado o resultado.
 
 
 

@@ -58,6 +58,9 @@ title: Equipe
 
 # Monitores
 
+
+# Colaboradores
+
 <table>
     <tbody class="equipe"> 
         <tr>
@@ -91,8 +94,6 @@ title: Equipe
         </tr>
     </tbody>
 </table>
-
-# Colaboradores
 
 <table>
     <tbody class="equipe"> 

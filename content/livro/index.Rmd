@@ -6,11 +6,15 @@ title: Livro da disciplina
   Livro da disciplina
 </h1>
 
-Este material é baseado no livro OpenIntro Statistics, o qual foi traduzido e adaptado pela aluna de pós-graduação Juliana Sena de Souza e pelos professores Márcia, Lisiane, Markus e Rodrigo. Recomenda-se a utilização do mesmo como material de estudo para acompanhamento da disciplina.
+Este material é baseado no livro OpenIntro Statistics, o qual foi traduzido e adaptado por Juliana Sena de Souza, Márcia Helena Barbian, Gabriel Holmer Saul, Lisiane Selau, Markus Stein e Rodrigo dos Reis. 
+
+Recomenda-se a utilização do mesmo como material de estudo para acompanhamento da disciplina.
 
 Obs.: A numeração dos capítulos NÃO possui relação direta com a numeração dos slides/vídeos da disciplina. Verifique os títulos de cada material.
 
-<b>[Livro completo](livro_completo/index.html)</b>
+<b>[Livro completo em pdf](livro_probabilidade_estatistica_EAD.pdf)</b>
+
+<b>[Livro completo em html](livro_completo/index.html)</b>
 
 <b>[Capítulo 1 - Introdução](cpt1/ch1_intro.html)</b>
 

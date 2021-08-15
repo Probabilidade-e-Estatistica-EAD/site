@@ -3,7 +3,7 @@ title: Probcast
 ---
 
 <h1 class="titulo"> 
-  Podcast de Probabilidade e Estatística!
+  probcast - O Podcast da Probabilidade e Estatística!
 </h1>
 
 ## Episódio 1
@@ -35,5 +35,36 @@ O Dicionário da Probabilidade e Estatística: os termos fundamentais para acomp
 <a href="episodios/ep3.mp3">
   Clique aqui para ouvir o episódio 3
 </a>
+
+## Episódio 4
+
+<p align="justify">
+Aprendendo a ensinar estatística - com a Profª. Luciana Nunes 
+
+Sobre este Episódio: Nesta edição especial para futuros educadores, conversaremos sobre como ensinar estatística para crianças pode ser mais fácil do que você imagina.
+</p>
+
+<div class="row">
+
+<div class="col-md-5 col-lg-5">
+  <iframe width="200%" height="315" src="https://www.youtube.com/embed/mLFaymPt8Dk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+  </iframe>
+</div>
+
+
+## Episódio 5
+
+<p align="justify">
+Entendendo uma pandemia com estatística - Professores Luís Vidaletti Ruas e Rodrigo dos Reis
+
+Sobre este Episódio: Nesta edição, conversaremos com os professores Luidi e Rodrigo sobre como utilizar estatística para compreender uma pandemia. 
+</p>
+
+<div class="row">
+
+<div class="col-md-5 col-lg-5">
+  <iframe width="200%" height="315" src="https://www.youtube.com/embed/8FfsrQgLfCE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+  </iframe>
+</div>
 
 

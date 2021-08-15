@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Probabilidade e Estatística EAD</title>
-    <link>https://www.ufrgs.br/probabilidade-estatistica/</link>
+    <link>/probabilidade-estatistica/</link>
     <description>Recent content on Probabilidade e Estatística EAD</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 31 Mar 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://www.ufrgs.br/probabilidade-estatistica/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/probabilidade-estatistica/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Slides da disciplina</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/slides/</link>
+      <link>/probabilidade-estatistica/slides/</link>
       <pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/slides/</guid>
+      <guid>/probabilidade-estatistica/slides/</guid>
       <description>SlidesVeja aqui somente os slides que foram utilizados para a confecção das videoaulas.
 Área 11.1 Introdução
 1.2 Tabela de Frequências
@@ -34,10 +34,10 @@
     
     <item>
       <title>Vídeos</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/videos/</link>
+      <link>/probabilidade-estatistica/videos/</link>
       <pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/videos/</guid>
+      <guid>/probabilidade-estatistica/videos/</guid>
       <description>VideoaulasAs videoaulas estão dispostas na ordem em que os conteúdos são ministrados ao longo do semestre. Note que os vídeos das Áreas 1, 2 e 3, apresentam, respectivamente, o conteúdo para as Provas 1, 2 e 3.
 Área 1
 
@@ -55,19 +55,19 @@
     
     <item>
       <title>Equipe</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/equipe/</link>
+      <link>/probabilidade-estatistica/equipe/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/equipe/</guid>
-      <description>ProfessoresLisiane Priscila Roldão Selau lisianeselau@gmail.com Sala B212 IME github.com/lisianeselauMárcia Helena Barbian mhbarbian@gmail.com Sala B120 IME github.com/marcia-barbianMarkus Chagas Stein markus.stein@ufrgs.br Sala B120 IME github.com/markus-steinRodrigo Citton Padilha dos Reis rodrigocpdosreis@gmail.com Sala B215 IME github.com/rdosreisMonitoresGabriel Holmer Saul github.com/ghsaulHenrique Saraiva Canal do youtubeMaico Henrique Mann github.</description>
+      <guid>/probabilidade-estatistica/equipe/</guid>
+      <description>ProfessoresLisiane Priscila Roldão Selau lisianeselau@gmail.com Sala B212 IME github.com/lisianeselauMárcia Helena Barbian mhbarbian@gmail.com Sala B120 IME github.com/marcia-barbianMarkus Chagas Stein markus.stein@ufrgs.br Sala B120 IME github.com/markus-steinRodrigo Citton Padilha dos Reis rodrigocpdosreis@gmail.com Sala B215 IME github.com/rdosreisMonitoresColaboradoresGabriel Holmer Saul github.</description>
     </item>
     
     <item>
       <title>Extras</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/extra/</link>
+      <link>/probabilidade-estatistica/extra/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/extra/</guid>
+      <guid>/probabilidade-estatistica/extra/</guid>
       <description>Materiais ExtrasVídeosCanal do monitor Henrique Saraiva. Ensino eficiente - canal desenvolvido pelo monitor Henrique Saraiva para desenvolvimento de conteúdo: auxílio na elaboração de vídeo, edição de vídeo, gravação, etc.
 Como não ser ignorante sobre o mundo
 Khanacademy academy
@@ -79,10 +79,10 @@ Tabelas das distribuições Z, T, Qui-Quadrado e F
     
     <item>
       <title>Home</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/homepage/home/</link>
+      <link>/probabilidade-estatistica/homepage/home/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/homepage/home/</guid>
+      <guid>/probabilidade-estatistica/homepage/home/</guid>
       <description>BEM VINDO(A) AO SITE DA DISCIPLINA MAT02219 - PROBABILIDADE E ESTATÍSTICA EAD!Este site foi desenvolvido pela equipe de Probabilidade e Estatística EAD da UFRGS com o objetivo de reunir os principais materiais de apoio da disciplina, bem como materiais extras que corroboram com o aprendizado adicional.
 Os materiais básicos podem ser acessados nas abas Livro,Slides,Vídeos eListas.
 Na aba Materiais Extras você pode acessar tabelas, apostilas, vídeos e aplicações web com conteúdo complementar.</description>
@@ -90,10 +90,10 @@ Na aba Materiais Extras você pode acessar tabelas, apostilas, vídeos e aplica�
     
     <item>
       <title>Listas</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/listas/</link>
+      <link>/probabilidade-estatistica/listas/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/listas/</guid>
+      <guid>/probabilidade-estatistica/listas/</guid>
       <description>Listas de exercícioPronto para pôr em prática o que você aprendeu? Então vamos nessa!
 As listas foram numeradas da mesma maneira em que os slides e as videoaulas da disciplina. Ex.: Os exercícios referentes ao slide/videoaula 2.3 estão na lista 2.3.
 Área 1Lista 1.1 - Introdução
@@ -103,52 +103,54 @@ Lista 1.4 e 1.5 - Medidas descritivas e Análise exploratória</description>
     
     <item>
       <title>Livro da disciplina</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/livro/</link>
+      <link>/probabilidade-estatistica/livro/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/livro/</guid>
-      <description>Livro da disciplinaEste material é baseado no livro OpenIntro Statistics, o qual foi traduzido e adaptado pela aluna de pós-graduação Juliana Sena de Souza e pelos professores Márcia, Lisiane, Markus e Rodrigo. Recomenda-se a utilização do mesmo como material de estudo para acompanhamento da disciplina.
+      <guid>/probabilidade-estatistica/livro/</guid>
+      <description>Livro da disciplinaEste material é baseado no livro OpenIntro Statistics, o qual foi traduzido e adaptado por Juliana Sena de Souza, Márcia Helena Barbian, Gabriel Holmer Saul, Lisiane Selau, Markus Stein e Rodrigo dos Reis.
+Recomenda-se a utilização do mesmo como material de estudo para acompanhamento da disciplina.
 Obs.: A numeração dos capítulos NÃO possui relação direta com a numeração dos slides/vídeos da disciplina. Verifique os títulos de cada material.</description>
     </item>
     
     <item>
       <title>Probcast</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/probcast/</link>
+      <link>/probabilidade-estatistica/probcast/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/probcast/</guid>
-      <description>Podcast de Probabilidade e Estatística!Episódio 1Probabilidade e Estatística: Pra quê serve tudo isso? Parte 1 (com Prof. Márcia Barbian e Prof. Markus Stein)Clique aqui para ouvir o episódio 1
+      <guid>/probabilidade-estatistica/probcast/</guid>
+      <description>probcast - O Podcast da Probabilidade e Estatística!Episódio 1Probabilidade e Estatística: Pra quê serve tudo isso? Parte 1 (com Prof. Márcia Barbian e Prof. Markus Stein)Clique aqui para ouvir o episódio 1
 Episódio 2Probabilidade e Estatística: Pra quê serve tudo isso? Parte 2 (com Prof. Lisiane Selau)Clique aqui para ouvir o episódio 2
 Episódio 3O Dicionário da Probabilidade e Estatística: os termos fundamentais para acompanhar o semestre “de boa” (com Prof.</description>
     </item>
     
     <item>
       <title>Rexams</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/rexams/</link>
+      <link>/probabilidade-estatistica/rexams/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/rexams/</guid>
+      <guid>/probabilidade-estatistica/rexams/</guid>
       <description>RexamsVocê pode acessar os arquivos com as questões de provas clicando aqui.</description>
     </item>
     
     <item>
       <title>Slides do material da openintro, compatível com o material do Livro da disciplina.</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/slides_livro/</link>
+      <link>/probabilidade-estatistica/slides_livro/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/slides_livro/</guid>
-      <description>Slides OpenintroEste material é baseado nos Slides da OpenIntro Statistics, o qual foi traduzido e adaptado por Priscilla Gnewuch e Márcia Helena Barbian. Recomenda-se a utilização do mesmo como material de estudo para acompanhamento da disciplina.
+      <guid>/probabilidade-estatistica/slides_livro/</guid>
+      <description>Slides OpenintroEste material é baseado nos Slides da OpenIntro Statistics, o qual foi traduzido e adaptado por Priscilla Gnewuch, Márcia Helena Barbian e Maitê Mückler. Recomenda-se a utilização do mesmo como material de estudo para acompanhamento da disciplina.
 A numeração dos capítulos POSSUI relação direta com o livro.
 Capítulo 1 - Introdução
-Capítulo 2 - Probabilidade</description>
+Capítulo 2 - Probabilidade
+Capítulo 3 - Distribuições de variáveis aleatórias</description>
     </item>
     
     <item>
       <title>Tutorial</title>
-      <link>https://www.ufrgs.br/probabilidade-estatistica/tutorial/</link>
+      <link>/probabilidade-estatistica/tutorial/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.ufrgs.br/probabilidade-estatistica/tutorial/</guid>
+      <guid>/probabilidade-estatistica/tutorial/</guid>
       <description>Tutorial do sitePara acessar o tutorial de como gerir o site de Probabilidade e Estatística, clique aqui.</description>
     </item>
     
